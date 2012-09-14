@@ -11,14 +11,13 @@ class Furtive:
     def __init__(self, dir, verbose = False):
         self.dir = dir
         self.verbose = verbose
-        self.__openDB()
 
     # Connect to sqlite3 database
     def __openDB(self):        
         try:
             self.sqliteCursor = sqlite3.connect(os.path.join(self.dir, self.sqliteFile))
             self.sqliteCursor = self.sqliteCursor.cursor()
-            self.sqliteCursor.execute("CREATE TABLE IF NOT EXISTS filehashes(filename TEXT, hash text)")
+            self.sqliteCursor.execute("CREATE TABLE IF NOT EXISTS filehashes(filename TEXT, hash TEXT)")
         except lite.Error, e:
             print "Error %s:" % e.args[0]
             sys.exit(1)
@@ -36,8 +35,6 @@ class Furtive:
     # Change DB
     def setSQLFile(self, sqliteFile):
         self.sqliteFile = sqliteFile
-        self.__closeDB()
-        self.__openDB()
 
     # Generate a set consisting of files relative to the given dir 
     def getFiles(self,dir = None):
@@ -79,6 +76,7 @@ class Furtive:
      
     # Get hash dictionary from sqlite3 DB
     def getPreviousHashes(self,dir = None):
+        self.__openDB()
         # If no dir is provided when calling this method, use object's dir
         if dir is None:
             dir = self.dir
@@ -96,9 +94,11 @@ class Furtive:
             for file, hash in fetchedHashes:
                 hashes[file] = hash
             return hashes
+        self.__closeDB()
     
     # Save hashes to sqlite3 DB
     def saveHashes(self, hashedFileList = None):
+        self.__openDB()
         if hashedFileList is None:
             hashedFileList = self.hashList
 
@@ -111,6 +111,7 @@ class Furtive:
         except sqlite3.Error, e:
             sys.stderr.write("Error " + e.args[0] + ":\n")
             sys.exit(1)
+        self.__closeDB()
 
     # Compare the file lists and report the changes
     def compareFileLists(self, fileList1, fileList2):
@@ -148,7 +149,6 @@ def main():
     print "Previous Hashes: ",previousHashes
     hashes.compareFileLists(hashList,previousHashes)
     hashes.saveHashes(hashList)
-    #previousHashes = hashes.getPreviousHashes()
     
 # Check Python Version
 if sys.hexversion < 0x02070000:
