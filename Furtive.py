@@ -1,47 +1,55 @@
-import argparse, os, hashlib, sys, sqlite3
+import argparse
+import os
+import hashlib
+import sys
+import sqlite3
 
 class Furtive:
     verbose = False
     dir = ""
     hashList = {}
-    sqliteFile = ".manifest.db"
-    sqliteConnection = None
-    sqliteCursor = None
+    manifestFile = ".manifest.db"
+    conn = None
+    cur = None
     
     def __init__(self, dir, verbose = False):
         self.dir = dir
         self.verbose = verbose
-
-    # Connect to sqlite3 database
+    
     def __openDB(self):        
+        """Open sqlite database"""
         try:
-            self.sqliteCursor = sqlite3.connect(os.path.join(self.dir, self.sqliteFile))
-            self.sqliteCursor = self.sqliteCursor.cursor()
-            self.sqliteCursor.execute("CREATE TABLE IF NOT EXISTS filehashes(filename TEXT, hash TEXT)")
+            self.conn = sqlite3.connect(os.path.join(self.dir, self.manifestFile))
+            self.cur = self.conn.cursor()
+            self.cur.execute("CREATE TABLE IF NOT EXISTS filehashes(filename TEXT, hash TEXT)")
         except lite.Error, e:
             print "Error %s:" % e.args[0]
             sys.exit(1)
     
-    # close the DB connection
     def __closeDB(self):
-        self.sqliteCursor = None
-        
+        """Close sqlite database"""
+        self.conn.commit()
+        self.cur = None
+    
+    def __truncateDB(self):
+        """Truncate (delete) manifest file """
+        self.cur.execute("DELETE FROM filehashes")
+    
     def setVerbosity(self, verbosity):
         self.verbosity = verbosity
-
+    
     def setDirectory(self, dir):
         self.dir = dir
-
-    # Change DB
-    def setSQLFile(self, sqliteFile):
-        self.sqliteFile = sqliteFile
-
-    # Generate a set consisting of files relative to the given dir 
+    
+    def setSQLFile(self, manifestFile):
+        """Set manifest file to another file"""
+        self.manifestFile = manifestFile
+    
     def getFiles(self,dir = None):
-        # If no dir is provided when calling this method, use object's dir
+        """Generate a set consisting of files relative to the given dir."""
         if dir is None:
             dir = self.dir
-
+        
         fileSet = set()
         for root, dirs, files in os.walk(dir):
             for file in files:
@@ -53,9 +61,9 @@ class Furtive:
                     sys.stderr.write("Found File: " + relative_path + "\n")
                 fileSet.add(relative_path)
         return fileSet
-
-    # Hash each file in the set fileSet. Returns a dict of reltive_path/file: hash    
+    
     def hashFiles(self,fileSet):
+        """Hash each file in the set fileSet. Returns a dict of reltive_path/file: hash"""
         hashList = {}
         for file in fileSet:
             if self.verbose == True:
@@ -74,8 +82,8 @@ class Furtive:
             f.close()
         return hashList
      
-    # Get hash dictionary from sqlite3 DB
     def getPreviousHashes(self,dir = None):
+        """Get hash dictionary from sqlite3 DB"""
         self.__openDB()
         # If no dir is provided when calling this method, use object's dir
         if dir is None:
@@ -83,12 +91,12 @@ class Furtive:
        
         # Run SQL to pull stuff from the DB 
         try:
-            self.sqliteCursor.execute("SELECT * FROM filehashes");
+            self.cur.execute("SELECT * FROM filehashes");
         except sqlite3.Error, e:
             sys.stderr.write("Error " + e.args[0] + ":\n")
             sys.exit(1)
         else:
-            fetchedHashes = self.sqliteCursor.fetchall()
+            fetchedHashes = self.cur.fetchall()
             # Fetch rows and place in a dict we can use
             hashes = {}
             for file, hash in fetchedHashes:
@@ -96,16 +104,17 @@ class Furtive:
             return hashes
         self.__closeDB()
     
-    # Save hashes to sqlite3 DB
     def saveHashes(self, hashedFileList = None):
+        """Save hashes to manifest file"""
         self.__openDB()
+        self.__truncateDB()
         if hashedFileList is None:
             hashedFileList = self.hashList
 
         # Try to insert hashes in DB
         try:
             for file, hash in hashedFileList.iteritems():
-                self.sqliteCursor.execute("INSERT OR REPLACE INTO filehashes VALUES (?,?)",(file, hash));
+                self.cur.execute('INSERT INTO filehashes VALUES (?,?)',(file, hash));
                 if self.verbose == True:
                     sys.stderr.write("Inserted Hash in DB for: " + file + "\n")
         except sqlite3.Error, e:
@@ -113,24 +122,26 @@ class Furtive:
             sys.exit(1)
         self.__closeDB()
 
-    # Compare the file lists and report the changes
     def compareFileLists(self, fileList1, fileList2):
+        """Compare the file lists and report the changes"""
         fileList1_set = set(fileList1.keys())
         fileList2_set = set(fileList2.keys())
-        print "Set1: ",fileList1_set
-        print "Set2: ",fileList2_set
-        fileList_intersect = fileList1_set.intersection(fileList2_set)
-        # First see what files been added
-        added = fileList1_set - fileList2_set
-        print added
+        report = {}
+
+        # Find Intersection
+        report['intersect'] = fileList1_set.intersection(fileList2_set)
+
+        # Find files added
+        report['added'] = fileList1_set - fileList2_set
+
         # Next, see what files been removed
-        removed = fileList2_set - fileList1_set
-        print removed
+        report['removed'] = fileList2_set - fileList1_set
         # Check to see what has changed
         #changed = set(o for o in fileList_intersect if fileList1.[o] != fileList2[o])
 
         # Check to see what has not changed (might be a waste of resources)
         #unchanged = set(o for o in fileList_intersect if fileList1.[o] == fileList2[o])
+        return report
         
         
 def main():
@@ -146,7 +157,6 @@ def main():
     fileSet = hashes.getFiles()
     hashList = hashes.hashFiles(fileSet)
     previousHashes = hashes.getPreviousHashes()
-    print "Previous Hashes: ",previousHashes
     hashes.compareFileLists(hashList,previousHashes)
     hashes.saveHashes(hashList)
     
