@@ -123,7 +123,12 @@ class Furtive:
         self.__closeDB()
 
     def compareFileLists(self, fileList1, fileList2):
-        """Compare the file lists and report the changes"""
+        """Compare the file lists and report the changes.
+           This method checks for the intersection between
+           both file lists as well as the differences. Next,
+           it looks to see which files in the intersecting 
+           set do not have a matching hash.
+        """
         fileList1_set = set(fileList1.keys())
         fileList2_set = set(fileList2.keys())
         report = {}
@@ -137,10 +142,15 @@ class Furtive:
         # Next, see what files been removed
         report['removed'] = fileList2_set - fileList1_set
         # Check to see what has changed
-        #changed = set(o for o in fileList_intersect if fileList1.[o] != fileList2[o])
-
-        # Check to see what has not changed (might be a waste of resources)
-        #unchanged = set(o for o in fileList_intersect if fileList1.[o] == fileList2[o])
+        changed = set()
+        unchanged = set()
+        for o in report['intersect']:
+            if fileList1[o] != fileList2[o]:
+                changed.add(o)
+            else:
+                unchanged.add(o)
+        report['changed'] = changed
+        report['unchanged'] = unchanged
         return report
         
         
@@ -157,8 +167,21 @@ def main():
     fileSet = hashes.getFiles()
     hashList = hashes.hashFiles(fileSet)
     previousHashes = hashes.getPreviousHashes()
-    hashes.compareFileLists(hashList,previousHashes)
-    hashes.saveHashes(hashList)
+    report = hashes.compareFileLists(hashList,previousHashes)
+
+    print "Added: "
+    for file in report['added']:
+       print "    " + file
+    print "Removed: "
+    for file in report['removed']:
+       print "    " + file
+    print "Unchanged: "
+    for file in report['unchanged']:
+       print "    " + file
+    print "Changed: "
+    for file in report['changed']:
+       print "    " + file
+    #hashes.saveHashes(hashList)
     
 # Check Python Version
 if sys.hexversion < 0x02070000:
