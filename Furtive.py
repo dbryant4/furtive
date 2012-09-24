@@ -31,7 +31,7 @@ class Furtive:
         self.cur = None
     
     def __truncateDB(self):
-        """Truncate (delete) manifest file """
+        """Truncate (delete) manifest file"""
         self.cur.execute("DELETE FROM filehashes")
     
     def setVerbosity(self, verbosity):
@@ -39,6 +39,7 @@ class Furtive:
         self.verbosity = verbosity
     
     def setDirectory(self, dir):
+        """Set the root directory where to be manafested files are located"""
         self.dir = dir
     
     def setManifestFile(self, manifestFile):
