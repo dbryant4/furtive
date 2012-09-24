@@ -1,4 +1,3 @@
-import argparse
 import os
 import hashlib
 import sys
@@ -36,13 +35,14 @@ class Furtive:
         self.cur.execute("DELETE FROM filehashes")
     
     def setVerbosity(self, verbosity):
+        """Turn on verbose output. Values: True or False"""
         self.verbosity = verbosity
     
     def setDirectory(self, dir):
         self.dir = dir
     
-    def setSQLFile(self, manifestFile):
-        """Set manifest file to another file"""
+    def setManifestFile(self, manifestFile):
+        """Set manifest file to manifestFile"""
         self.manifestFile = manifestFile
     
     def getFiles(self,dir = None):
@@ -152,40 +152,3 @@ class Furtive:
         report['changed'] = changed
         report['unchanged'] = unchanged
         return report
-        
-        
-def main():
-    parser = argparse.ArgumentParser(description='Get Hash Values of Files within a directory.')
-    parser.add_argument('--dir', action="store", default=".", help='Directory containing files that will be checked')
-    parser.add_argument('--hashes', action="store", dest="hashes", default=[''], 
-                        help="Hash algorithm to use. Currently supports sha1")
-    parser.add_argument('--verbose',action="store_true", default=False, help="Be verbose")
-    parser.add_argument('--version', action='version', version='%(prog)s 1.0')
-    args = parser.parse_args()
-    
-    hashes = Furtive(args.dir, args.verbose)
-    fileSet = hashes.getFiles()
-    hashList = hashes.hashFiles(fileSet)
-    previousHashes = hashes.getPreviousHashes()
-    report = hashes.compareFileLists(hashList,previousHashes)
-
-    print "Added: "
-    for file in report['added']:
-       print "    " + file
-    print "Removed: "
-    for file in report['removed']:
-       print "    " + file
-    print "Unchanged: "
-    for file in report['unchanged']:
-       print "    " + file
-    print "Changed: "
-    for file in report['changed']:
-       print "    " + file
-    #hashes.saveHashes(hashList)
-    
-# Check Python Version
-if sys.hexversion < 0x02070000:
-    raise SystemError("Python version 2.7.0 or greater is required. You are running " + sys.version)
-
-if __name__ == "__main__":
-    main()
