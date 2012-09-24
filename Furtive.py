@@ -21,7 +21,7 @@ class Furtive:
             self.conn = sqlite3.connect(os.path.join(self.dir, self.manifestFile))
             self.cur = self.conn.cursor()
             self.cur.execute("CREATE TABLE IF NOT EXISTS filehashes(filename TEXT, hash TEXT)")
-        except lite.Error, e:
+        except sqlite3.Error, e:
             print "Error %s:" % e.args[0]
             sys.exit(1)
     
