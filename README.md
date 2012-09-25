@@ -29,3 +29,4 @@ ToDo
      - Automatically detect previous hashes used in existing manifests 
  - Update manifest database instead of deleting everything
  - Add functionality to store previous hashes along with date
+ - Import sha1sum output into manifest
