@@ -17,8 +17,20 @@ python hashDir.py --update-manifest --dir /path/to/archived/data
 Simple usage to print out a report of files that have been add, removed, changed, and unchanged. Useful for a test :
 python hashDir.py --dir /path/to/archived/data
 
-To has
+To hash and update
 python hashDir.py --manifest ~/test.manifest --update-manifest
+
+Furtive Module Usage:
+fur = Furtive('/path/to/base/dir')
+fur.setManifest('/path/to/optional/external/manifest') # Optional defaults to ./.manifest/db
+fur.compare() # Tell Furtive to hash the files in the provided dir and then compare them with the previous hashes
+fur.hashes    # Dict of files and hashes [{'relative/path/to/file': 'hash'}]
+fur.add       # list containing newly added files
+fur.removed   # list containing files that have been removed
+fur.unchanged # list containing unchanged files (hopefully all files)
+fur.changed   # list containing changed files (ie hash values are different)
+fur.getPreviousHash('file') #get the previous hash of file (equivelant to fur.hashes['file'])
+fur.updateManifest()  # Write changes to manifest
 
 ToDo
 ======
