@@ -74,8 +74,14 @@ class Furtive:
 	    full_path = os.path.join(self.dir, file)
 
 	    # Open file, read it, hash it, place hash in 
-	    f = open(full_path, "r")
-	    hash = hashlib.sha1("".join(f.readlines())).hexdigest()
+            with open(full_path,'r') as f:
+                m = hashlib.sha1()
+                while True:
+                    chunk = f.read(m.block_size)
+                    if not chunk:
+                       break
+                    m.update(chunk)
+            hash = m.hexdigest()
 	    if self.verbose == True:
 	        sys.stderr.write(hash + " " + file + "\n")
 	    #Put hash in dictionary
