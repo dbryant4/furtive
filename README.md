@@ -22,17 +22,17 @@ python hashDir.py --manifest ~/test.manifest --update-manifest
 
 Furtive Module Usage:
  * fur = new furtive('/path/to/base/dir')
- * fur.setManifest('/path/to/optional/external/manifest') # Optional defaults to ./.manifest/db
+ * fur.set_manifest('/path/to/optional/external/manifest') # Optional defaults to ./.manifest/db
  * fur.compare()   # Tell Furtive to hash the files in the provided dir and then compare them with the previous hashes
  * fur.hashes      # Dict of files and hashes generated using current file contents [{'relative/path/to/file': 'hash'}]
- * fur.prevHashes  # Dict of files and hashes read from the manifest [{'relative/path/to/file': 'hash'}]
+ * fur.prev_hashes  # Dict of files and hashes read from the manifest [{'relative/path/to/file': 'hash'}]
  * fur.add         # list containing newly added files
  * fur.removed     # list containing files that have been removed
  * fur.unchanged   # list containing unchanged files (hopefully all files)
  * fur.changed     # list containing changed files (ie hash values are different)
- * fur.getPreviousHash('file') #get the previous hash of file (equivelant to fur.prevHashes['file'])
- * fur.getHash('file') #get the previous hash of file (equivelant to fur.hashes['file'])
- * fur.updateManifest()  # Write changes to manifest
+ * fur.get_previous_hash('file') #get the previous hash of file (equivelant to fur.prevHashes['file'])
+ * fur.get_hash('file') #get the previous hash of file (equivelant to fur.hashes['file'])
+ * fur.update_manifest()  # Write changes to manifest
 
 ToDo
 ======
