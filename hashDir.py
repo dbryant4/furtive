@@ -34,28 +34,28 @@ def main():
     hashes = Furtive(args.dir, args.verbose)
     
     # Setting manifest file is optional. Defaults to ./manifest.db
-    hashes.setManifestFile(args.manifest)
+    hashes.set_manifest(args.manifest)
 
-    fileSet = hashes.getFiles()
-    hashList = hashes.hashFiles(fileSet)
-    previousHashes = hashes.getPreviousHashes()
-    report = hashes.compareFileLists(hashList,previousHashes)
+    hashes.compare()
+    #hashList = hashes.hashFiles(fileSet)
+    #previousHashes = hashes.getPreviousHashes()
+    #report = hashes.compareFileLists(hashList,previousHashes)
  
     print "Added: "
-    for file in report['added']:
-       print "    " + file
+    for file in hashes.added:
+       print "    " + hashes.get_hash(file) + "  " + file
     print "Removed: "
-    for file in report['removed']:
-       print "    " + file
+    for file in hashes.removed:
+       print "    " + hashes.get_previous_hash(file) + "  " + file
     print "Unchanged: "
-    for file in report['unchanged']:
-       print "    " + file
+    for file in hashes.unchanged:
+       print "    " + hashes.get_previous_hash(file) + "  " + hashes.get_hash(file) + "  " + file
     print "Changed: "
-    for file in report['changed']:
-       print "    " + file
+    for file in hashes.changed:
+       print "    " + hashes.get_previous_hash(file) + "  " + hashes.get_hash(file) + "  " + file
     
     if args.update_manifest == True: 
-        hashes.saveHashes(hashList)
+        hashes.update_manifest()
 
 
 if __name__ == "__main__":

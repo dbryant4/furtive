@@ -1,17 +1,35 @@
+#! /usr/bin/env python 
+# -*- coding: utf-8 -*- 
+"""
+Furtive. Deal with it!
+"""
+
 import os
 import hashlib
 import sys
 import sqlite3
 
 class Furtive:
-    verbose = False
-    dir = ""
-    hashList = {}
-    manifestFile = ".manifest.db"
+    """
+       Furtive: file integrity verification system. 
+    """
     conn = None
     cur = None
+    _file_list_intersect = None
+    verbose = False
+    dir = ""
+    file_list = None
+    prev_file_list = None
+    hashes = None
+    prev_hashes = None
+    added = None
+    removed = None
+    unchanged = None
+    changed = None
+    hashList = {}
+    manifestFile = ".manifest.db"
     
-    def __init__(self, dir, verbose = False):
+    def __init__(self, dir, verbose=False):
         self.dir = dir
         self.verbose = verbose
     
@@ -34,19 +52,19 @@ class Furtive:
         """Truncate (delete) manifest file"""
         self.cur.execute("DELETE FROM filehashes")
     
-    def setVerbosity(self, verbosity):
+    def set_verbosity(self, verbosity):
         """Turn on verbose output. Values: True or False"""
         self.verbosity = verbosity
     
-    def setDirectory(self, dir):
-        """Set the root directory where to be manafested files are located"""
+    def set_directory(self, dir):
+        """Set the root directory where to be manifested files are located"""
         self.dir = dir
     
-    def setManifestFile(self, manifestFile):
-        """Set manifest file to manifestFile"""
-        self.manifestFile = manifestFile
-    
-    def getFiles(self,dir = None):
+    def set_manifest(self, manifest_file):
+        """Set manifest file to manifest_file"""
+        self.manifestFile = manifest_file
+     
+    def get_files(self,dir = None):
         """Generate a set consisting of files relative to the given dir."""
         if dir is None:
             dir = self.dir
@@ -63,7 +81,7 @@ class Furtive:
                 fileSet.add(relative_path)
         return fileSet
     
-    def hashFiles(self,fileSet):
+    def hash_files(self,fileSet):
         """Hash each file in the set fileSet. Returns a dict of reltive_path/file: hash"""
         hashList = {}
         for file in fileSet:
@@ -89,9 +107,15 @@ class Furtive:
             f.close()
         return hashList
      
-    def getPreviousHashes(self,dir = None):
-        """Get hash dictionary from sqlite3 DB"""
+    def get_previous_hashes(self,dir = None):
+        """
+           Get hash dictionary from sqlite3 DB
+        """
+        if not os.path.isfile(self.manifestFile):
+            return {}
+
         self.__openDB()
+            
         # If no dir is provided when calling this method, use object's dir
         if dir is None:
             dir = self.dir
@@ -111,8 +135,15 @@ class Furtive:
             return hashes
         self.__closeDB()
     
-    def saveHashes(self, hashedFileList = None):
-        """Save hashes to manifest file"""
+    def update_manifest(self, hashedFileList = None):
+        """
+           Save hashes to manifest file. Currently simply truncates the 
+           manifest and writes everything to the DB
+        """
+
+        if hashedFileList is None:
+            hashedFileList = self.hashes
+
         self.__openDB()
         self.__truncateDB()
         if hashedFileList is None:
@@ -129,33 +160,50 @@ class Furtive:
             sys.exit(1)
         self.__closeDB()
 
-    def compareFileLists(self, fileList1, fileList2):
-        """Compare the file lists and report the changes.
-           This method checks for the intersection between
-           both file lists as well as the differences. Next,
-           it looks to see which files in the intersecting 
-           set do not have a matching hash.
-        """
-        fileList1_set = set(fileList1.keys())
-        fileList2_set = set(fileList2.keys())
-        report = {}
+    def compare(self):
+        """ Tell Furtive to hash the files in the provided dir and 
+            then compare them with the previous hashes 
+        """ 
+        # Get set of files on file system
+        self.file_list = self.get_files()
+        
+        # Hash files and place within object
+        self.hashes = self.hash_files(self.file_list)
 
+        # Get old hashes from manifest
+        self.prev_hashes = self.get_previous_hashes()
+        self.prev_file_list = set(self.prev_hashes.keys())
+        
         # Find Intersection
-        report['intersect'] = fileList1_set.intersection(fileList2_set)
+        self._file_list_intersect = self.prev_file_list.intersection(self.file_list)
 
         # Find files added
-        report['added'] = fileList1_set - fileList2_set
+        self.added = self.file_list - self.prev_file_list
 
         # Next, see what files been removed
-        report['removed'] = fileList2_set - fileList1_set
+        self.removed = self.prev_file_list - self.file_list
+
         # Check to see what has changed
-        changed = set()
-        unchanged = set()
-        for o in report['intersect']:
-            if fileList1[o] != fileList2[o]:
-                changed.add(o)
+        self.changed = set()
+        self.unchanged = set()
+        for o in self._file_list_intersect:
+            if self.prev_hashes[o] != self.hashes[o]:
+                self.changed.add(o)
             else:
-                unchanged.add(o)
-        report['changed'] = changed
-        report['unchanged'] = unchanged
-        return report
+                self.unchanged.add(o)
+
+    def get_hash(self,file):
+        """
+           Returns the computed hash of the file using the current contents.
+        """
+        if self.hashes is None:
+            return None
+        return self.hashes[file]
+
+    def get_previous_hash(self,file):
+        """
+           Returns the hash stored in the manifest.
+        """
+        if self.prev_hashes is None:
+            return None
+        return self.prev_hashes[file]
