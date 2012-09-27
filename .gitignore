@@ -28,3 +28,6 @@ pip-log.txt
 
 # Furtive manifest file
 .manifest.db
+
+# Apple Files
+.DS_Store
