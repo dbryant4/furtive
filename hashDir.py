@@ -14,7 +14,9 @@ def main():
     	                 help='''Directory containing files that will be 
     	                         checked. Default: .''')
     parser.add_argument('--hashes', action="store", dest="hashes", default=[''], 
-                        help="Hash algorithm to use. Currently supports sha1")
+                        help="Hash algorithm to use. Currently supports sha1 only.")
+    parser.add_argument('--exclude', action="store", dest="excludes", default=[''], 
+                        help="Patterns to exclude files and directories from manifest.")
     parser.add_argument('--manifest', action="store", dest="manifest", 
     	                default='.manifest.db', 
                         help='''Location of the manifast file. Manifests may 
