@@ -17,6 +17,7 @@ class Furtive:
     cur = None
     _file_list_intersect = None
     verbose = False
+    show_progress = False
     dir = ""
     file_list = None
     prev_file_list = None
@@ -64,6 +65,12 @@ class Furtive:
         """Set manifest file to manifest_file"""
         self.manifestFile = manifest_file
      
+    def show_progress(self, progress=False):
+        """ Show a progress indicator on STDOUT.
+            Default: False
+        """
+        self.show_progress = progress
+
     def get_files(self,dir = None):
         """Generate a set consisting of files relative to the given dir."""
         if dir is None:
@@ -84,14 +91,21 @@ class Furtive:
     def hash_files(self,fileSet):
         """Hash each file in the set fileSet. Returns a dict of reltive_path/file: hash"""
         hashList = {}
+        file_num = 0
+        total_num_files = len(fileSet)
         for file in fileSet:
+            file_num = file_num + 1
             if self.verbose == True:
                 sys.stderr.write("Hashing: " + os.path.join(self.dir, file) + "\n")
- 
+            if self.show_progress:
+                progress = round((float(file_num) / total_num_files) * 100,1)
+                sys.stdout.write("\r" + str(progress) + "% " + 
+                    str(file_num) + " of " + str(total_num_files))
+                sys.stdout.flush()
             # Full file path (ex. /etc/rc.d/rc.1/test)
-	    full_path = os.path.join(self.dir, file)
-
-	    # Open file, read it, hash it, place hash in 
+            full_path = os.path.join(self.dir, file)
+            
+	        # Open file, read it, hash it, place hash in 
             with open(full_path,'r') as f:
                 m = hashlib.sha1()
                 while True:

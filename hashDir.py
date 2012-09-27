@@ -24,9 +24,14 @@ def main():
                                 --dir. Must provide path and filename of 
                                 the manifest file. Default: DIR/.manifest.db''')
     parser.add_argument('--update-manifest',action="store_true", 
-    	                default=False, help='''When this flag is present
+    	                default=False, help='''When this flag is present,
     	                                       update manifest with changes. 
     	                                       Default: False''')
+    parser.add_argument('--show-progress',action="store_true", 
+                        default=False, help='''When this flag is present,
+                                               a progress indicator will
+                                               show on STDOUT. 
+                                               Default: False''')
     parser.add_argument('--verbose',action="store_true", 
     	                default=False, help="Be verbose")
     parser.add_argument('--version', action='version', 
@@ -34,15 +39,16 @@ def main():
     args = parser.parse_args()
     
     hashes = Furtive(args.dir, args.verbose)
-    
+
+    hashes.show_progress(args.show_progress)
+
     # Setting manifest file is optional. Defaults to ./manifest.db
     hashes.set_manifest(args.manifest)
 
     hashes.compare()
-    #hashList = hashes.hashFiles(fileSet)
-    #previousHashes = hashes.getPreviousHashes()
-    #report = hashes.compareFileLists(hashList,previousHashes)
- 
+    
+    if args.show_progress:
+        print "\n",
     print "Added: "
     for file in hashes.added:
        print "    " + hashes.get_hash(file) + "  " + file
