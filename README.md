@@ -36,8 +36,6 @@ Furtive Module Usage:
 
 ToDo
 ======
- - Test to see if manifest file exists before opening to prevent creating new manifest file even when we are not testing
- - Optimize for large amounts of data. Currently stores all hashes in a data type then returns the hashes. 
  - Improve documentation by complying with PEP8
  - Add options for using multiple hash algorithms
      - Add arg options for users to select which hash to use
