@@ -1,14 +1,19 @@
-import argparse
 import sys
 from Furtive import Furtive
+
+try:
+    import argparse
+except ImportError:
+    print "argparse must be installed manually for Python 2.6 and earlier."
+    print "please download argparse from http://pypi.python.org/pypi/argparse\n"
+    print "Installation can also be attempted with:"
+    print "\"easy_install argparse\""
+    print "\"pip install argparse\""
+    sys.exit()
 
 ''' '''
 
 def main():
-	# If Python 2.6 or lower, should import optparse but erroring out now
-    if sys.hexversion < 0x02070000:
-        raise SystemError("Python version 2.7.0 or greater is required. You are running " + sys.version)
-
     parser = argparse.ArgumentParser(description='Get Hash Values of Files within a directory.')
     parser.add_argument('--dir', action="store", default=".", 
     	                 help='''Directory containing files that will be 
