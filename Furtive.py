@@ -28,7 +28,7 @@ class Furtive:
     unchanged = None
     changed = None
     hashList = {}
-    manifestFile = ".manifest.db"
+    manifest_file = ".manifest.db"
     
     def __init__(self, dir, verbose=False):
         self.dir = dir
@@ -37,13 +37,13 @@ class Furtive:
     def __openDB(self):        
         """Open sqlite database"""
         try:
-            self.conn = sqlite3.connect(os.path.join(self.dir, self.manifestFile))
+            self.conn = sqlite3.connect(os.path.join(self.dir, self.manifest_file))
             self.cur = self.conn.cursor()
             self.cur.execute("CREATE TABLE IF NOT EXISTS filehashes(filename TEXT, hash TEXT)")
         except sqlite3.Error, e:
-            print "Error %s:" % e.args[0]
+            print "Error %s: %s" % (e.args[0],os.path.join(self.dir, self.manifest_file))
             sys.exit(1)
-    
+
     def __closeDB(self):
         """Close sqlite database"""
         self.conn.commit()
@@ -63,7 +63,7 @@ class Furtive:
     
     def set_manifest(self, manifest_file):
         """Set manifest file to manifest_file"""
-        self.manifestFile = manifest_file
+        self.manifest_file = manifest_file
      
     def show_progress(self, progress=False):
         """ Show a progress indicator on STDOUT.
@@ -125,7 +125,9 @@ class Furtive:
         """
            Get hash dictionary from sqlite3 DB
         """
-        if not os.path.isfile(self.manifestFile):
+
+        if not os.path.isfile(self.manifest_file):
+            #os.path.join(self.dir, self.manifest_file)
             return {}
 
         self.__openDB()

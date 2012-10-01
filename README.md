@@ -3,24 +3,9 @@ Furtive
 
 File Integrity Verification System (furtive) aims to ensure long term data integrity verification for digital archival purposes.
 
-Example Usage
+Methods and Variables
 ======
-
-There is a script which shows how to utilize the Furtive Python module called hashDir.py. 
-
-For help:
-python hashDir.py --help
-
-Simple usage that does not save hash data:
-python hashDir.py --update-manifest --dir /path/to/archived/data
-
-Simple usage to print out a report of files that have been add, removed, changed, and unchanged. Useful for a test :
-python hashDir.py --dir /path/to/archived/data
-
-To hash and update
-python hashDir.py --manifest ~/test.manifest --update-manifest
-
-Furtive Module Usage:
+urtive Module Usage:
  * fur = new furtive('/path/to/base/dir')
  * fur.set_manifest('/path/to/optional/external/manifest') # Optional defaults to ./.manifest/db
  * fur.compare()   # Tell Furtive to hash the files in the provided dir and then compare them with the previous hashes
@@ -34,8 +19,35 @@ Furtive Module Usage:
  * fur.get_hash('file') #get the previous hash of file (equivelant to fur.hashes['file'])
  * fur.update_manifest()  # Write changes to manifest
 
+Example Usage
+======
+
+>>> from Furtive import Furtive
+>>> fur = Furtive('~/test_dir')
+>>> fur.compare()
+
+
+Example Script
+=====
+There is a script which shows how to utilize the Furtive Python module called hashDir.py. 
+
+For help:
+python hashDir.py --help
+
+Simple usage that does not save hash data:
+python hashDir.py --update-manifest --dir /path/to/archived/data
+
+Simple usage to print out a report of files that have been add, removed, and changed. Useful for a nightly email report:
+python hashDir.py --dir /path/to/archived/data --report-added -report-removed --report-changed
+
+To hash and update
+python hashDir.py --manifest ~/test.manifest --update-manifest
+
+
 ToDo
 ======
+ - Prevent creating manifest file in directory when manifest is stored in another location
+ - Try statements should raise and error instead of exiting
  - Improve documentation by complying with PEP8
  - Add options for using multiple hash algorithms
      - Add arg options for users to select which hash to use
