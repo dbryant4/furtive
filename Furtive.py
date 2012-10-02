@@ -21,7 +21,7 @@ class Furtive:
         self.conn = None
         self.cur = None
         self._file_list_intersect = None
-        self.show_progress = False
+        self.show_progress_indicator = False
         self.file_list = None
         self.prev_file_list = None
         self.hashes = None
@@ -69,7 +69,7 @@ class Furtive:
         """ Show a progress indicator on STDOUT.
             Default: False
         """
-        self.show_progress = progress
+        self.show_progress_indicator = progress
 
     def get_files(self,dir = None):
         """Generate a set consisting of files relative to the given dir."""
@@ -97,7 +97,7 @@ class Furtive:
             file_num = file_num + 1
             if self.verbose == True:
                 sys.stderr.write("Hashing: " + os.path.join(self.dir, file) + "\n")
-            if self.show_progress:
+            if self.show_progress_indicator:
                 progress = round((float(file_num) / total_num_files) * 100,1)
                 sys.stdout.write("\r" + str(progress) + "% " + 
                     str(file_num) + " of " + str(total_num_files))
