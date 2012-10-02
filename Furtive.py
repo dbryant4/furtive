@@ -13,26 +13,25 @@ class Furtive:
     """
        Furtive: file integrity verification system. 
     """
-    conn = None
-    cur = None
-    _file_list_intersect = None
-    verbose = False
-    show_progress = False
-    dir = ""
-    file_list = None
-    prev_file_list = None
-    hashes = None
-    prev_hashes = None
-    added = None
-    removed = None
-    unchanged = None
-    changed = None
-    hashList = {}
-    manifest_file = ".manifest.db"
+
     
     def __init__(self, dir, verbose=False):
         self.dir = dir
         self.verbose = verbose
+        self.conn = None
+        self.cur = None
+        self._file_list_intersect = None
+        self.show_progress = False
+        self.file_list = None
+        self.prev_file_list = None
+        self.hashes = None
+        self.prev_hashes = None
+        self.added = None
+        self.removed = None
+        self.unchanged = None
+        self.changed = None
+        self.hashList = {}
+        self.manifest_file = ".manifest.db"
     
     def __openDB(self):        
         """Open sqlite database"""
