@@ -36,7 +36,8 @@ class Furtive:
     def __openDB(self):        
         """Open sqlite database"""
         try:
-            self.conn = sqlite3.connect(os.path.join(self.dir, self.manifest_file))
+            os.chdir(self.dir)
+            self.conn = sqlite3.connect(self.manifest_file)
             self.cur = self.conn.cursor()
             self.cur.execute("CREATE TABLE IF NOT EXISTS filehashes(filename TEXT, hash TEXT)")
         except sqlite3.Error, e:
