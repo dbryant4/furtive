@@ -1,11 +1,15 @@
 Furtive
 =======
 
-File Integrity Verification System (furtive) aims to ensure long term data integrity verification for digital archival purposes.
+File Integrity Verification (furtive) aims to ensure long term data integrity verification for digital archival purposes. The idea is to create a manifest, or hash list, of all the files of which you wish to confirm integrity. 
+
+Usage Senario
+======
+Suppose you have a million digital photos that you have taken over the years. Also suppose you have organized them into a directory structure where the top level directories are the year the pictures under them were taken. For example, a directory named 2006 contains pictures from 2006. On January 1, 2007, you can create a manifest of the 2006 directory using furtive. Then you will be able to confirm the contents of the 2006 directory, and your digital photos, at any point in the future. 
 
 Methods and Variables
 ======
-urtive Module Usage:
+Furtive Module Usage:
  * fur = new furtive('/path/to/base/dir')
  * fur.set_manifest('/path/to/optional/external/manifest') # Optional defaults to ./.manifest/db
  * fur.compare()   # Tell Furtive to hash the files in the provided dir and then compare them with the previous hashes
@@ -22,10 +26,13 @@ urtive Module Usage:
 Example Usage
 ======
 
->>> from Furtive import Furtive
->>> fur = Furtive('~/test_dir')
+```
+>>> from furtive import furtive
+>>> fur = furtive('~/test_dir')
 >>> fur.compare()
-
+>>> fur.changed # Shows files that have changed
+>>> fur.update_manifest()  # Commits changes to manifest 
+```
 
 Example Script
 =====
@@ -42,16 +49,3 @@ python hashDir.py --dir /path/to/archived/data --report-added -report-removed --
 
 To hash and update
 python hashDir.py --manifest ~/test.manifest --update-manifest
-
-
-ToDo
-======
- - Prevent creating manifest file in directory when manifest is stored in another location
- - Try statements should raise and error instead of exiting
- - Improve documentation by complying with PEP8
- - Add options for using multiple hash algorithms
-     - Add arg options for users to select which hash to use
-     - Automatically detect previous hashes used in existing manifests 
- - Update manifest database instead of deleting everything
- - Add functionality to store previous hashes along with date
- - Import sha1sum output into manifest
