@@ -34,7 +34,10 @@ class Furtive:
         self.manifest_file = ".manifest.db"
     
     def __openDB(self):        
-        """Open sqlite database"""
+        """
+        Open sqlite database
+        """
+
         try:
             os.chdir(self.dir)
             self.conn = sqlite3.connect(self.manifest_file)
@@ -45,12 +48,18 @@ class Furtive:
             sys.exit(1)
 
     def __closeDB(self):
-        """Close sqlite database"""
+        """
+        Close sqlite database
+        """
+
         self.conn.commit()
         self.cur = None
     
     def __truncateDB(self):
-        """Truncate (delete) manifest file"""
+        """
+        Truncate (delete) manifest file
+        """
+
         self.cur.execute("DELETE FROM filehashes")
     
     def set_verbosity(self, verbosity):
@@ -58,25 +67,36 @@ class Furtive:
         self.verbosity = verbosity
     
     def set_directory(self, dir):
-        """Set the root directory where to be manifested files are located"""
+        """
+        Set the root directory where to be manifested files are located
+        """
+
         self.dir = dir
     
     def set_manifest(self, manifest_file):
-        """Set manifest file to manifest_file"""
+        """
+        Set manifest file to manifest_file
+        """
+
         self.manifest_file = manifest_file
      
     def show_progress(self, progress=False):
-        """ Show a progress indicator on STDOUT.
-            Default: False
+        """ 
+        Show a progress indicator on STDOUT.
+        Default: False
         """
+
         self.show_progress_indicator = progress
 
-    def get_files(self,dir = None):
-        """Generate a set consisting of files relative to the given dir."""
+    def get_files(self, dir=None):
+        """
+        Generate a set consisting of files relative to the given dir.
+        """
+
         if dir is None:
             dir = self.dir
         
-        fileSet = set()
+        file_set = set()
         for root, dirs, files in os.walk(dir):
             for file in files:
                 # Full file path (ex. /etc/rc.d/rc.1/test)
@@ -85,15 +105,18 @@ class Furtive:
                 relative_path = os.path.relpath(full_path, dir)
                 if self.verbose == True:
                     sys.stderr.write("Found File: " + relative_path + "\n")
-                fileSet.add(relative_path)
-        return fileSet
+                file_set.add(relative_path)
+        return file_set
     
-    def hash_files(self,fileSet):
-        """Hash each file in the set fileSet. Returns a dict of reltive_path/file: hash"""
-        hashList = {}
+    def hash_files(self, file_set):
+        """
+        Hash each file in the set fileSet. Returns a dict of reltive_path/file: hash
+        """
+
+        hash_list = {}
         file_num = 0
-        total_num_files = len(fileSet)
-        for file in fileSet:
+        total_num_files = len(file_set)
+        for file in file_set:
             file_num = file_num + 1
             if self.verbose == True:
                 sys.stderr.write("Hashing: " + os.path.join(self.dir, file) + "\n")
@@ -117,11 +140,11 @@ class Furtive:
 	    if self.verbose == True:
 	        sys.stderr.write(hash + " " + file + "\n")
 	    #Put hash in dictionary
-	    hashList[file]=hash
+	    hash_list[file] = hash
             f.close()
-        return hashList
+        return hash_list
      
-    def get_previous_hashes(self,dir = None):
+    def get_previous_hashes(self, dir=None):
         """
            Get hash dictionary from sqlite3 DB
         """
@@ -143,31 +166,31 @@ class Furtive:
             sys.stderr.write("Error " + e.args[0] + ":\n")
             sys.exit(1)
         else:
-            fetchedHashes = self.cur.fetchall()
+            fetched_hashes = self.cur.fetchall()
             # Fetch rows and place in a dict we can use
             hashes = {}
-            for file, hash in fetchedHashes:
+            for file, hash in fetched_hashes:
                 hashes[file] = hash
             return hashes
         self.__closeDB()
     
-    def update_manifest(self, hashedFileList = None):
+    def update_manifest(self, hashed_file_list=None):
         """
            Save hashes to manifest file. Currently simply truncates the 
            manifest and writes everything to the DB
         """
 
-        if hashedFileList is None:
-            hashedFileList = self.hashes
+        if hashed_file_list is None:
+            hashed_file_list = self.hashes
 
         self.__openDB()
         self.__truncateDB()
-        if hashedFileList is None:
-            hashedFileList = self.hashList
+        if hashed_file_list is None:
+            hashed_file_list = self.hashList
 
         # Try to insert hashes in DB
         try:
-            for file, hash in hashedFileList.iteritems():
+            for file, hash in hashed_file_list.iteritems():
                 self.cur.execute('INSERT INTO filehashes VALUES (?,?)',(file, hash));
                 if self.verbose == True:
                     sys.stderr.write("Inserted Hash in DB for: " + file + "\n")
@@ -180,6 +203,7 @@ class Furtive:
         """ Tell Furtive to hash the files in the provided dir and 
             then compare them with the previous hashes 
         """ 
+
         # Get set of files on file system
         self.file_list = self.get_files()
         
@@ -208,18 +232,20 @@ class Furtive:
             else:
                 self.unchanged.add(o)
 
-    def get_hash(self,file):
+    def get_hash(self, file):
         """
            Returns the computed hash of the file using the current contents.
         """
+
         if self.hashes is None:
             return None
         return self.hashes[file]
 
-    def get_previous_hash(self,file):
+    def get_previous_hash(self, file):
         """
            Returns the hash stored in the manifest.
         """
+
         if self.prev_hashes is None:
             return None
         return self.prev_hashes[file]
