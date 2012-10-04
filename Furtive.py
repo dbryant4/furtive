@@ -32,15 +32,18 @@ class Furtive:
         self.changed = None
         self.hashList = {}
         self.manifest_file = ".manifest.db"
-    
+        self.hash_algorithm = "sha1"
+
     def __openDB(self):        
         """
         Open sqlite database
         """
-
+        
+        old_cwd = os.getcwd()
         try:
             os.chdir(self.dir)
             self.conn = sqlite3.connect(self.manifest_file)
+            os.chdir(old_cwd)
             self.cur = self.conn.cursor()
             self.cur.execute("CREATE TABLE IF NOT EXISTS filehashes(filename TEXT, hash TEXT)")
         except sqlite3.Error, e:
@@ -79,6 +82,21 @@ class Furtive:
         """
 
         self.manifest_file = manifest_file
+
+    def set_hash_algorithm(self, algorithm):
+        """
+        Set the algorithm to use when hashing files. 
+        algorithm may be any algorithm offered up by the local openssl 
+        installation.
+        """
+        
+        try:
+            hashlib.new(algorithm)
+        except ValueError, e: 
+            raise
+        else:
+            self.hash_algorithm = algorithm
+    
      
     def show_progress(self, progress=False):
         """ 
@@ -128,9 +146,10 @@ class Furtive:
             # Full file path (ex. /etc/rc.d/rc.1/test)
             full_path = os.path.join(self.dir, file)
             
-	        # Open file, read it, hash it, place hash in 
+	    # Open file, read it, hash it, place hash in 
             with open(full_path,'r') as f:
-                m = hashlib.sha1()
+                #m = hashlib.sha1()
+                m = hashlib.new(self.hash_algorithm)
                 while True:
                     chunk = f.read(m.block_size)
                     if not chunk:
