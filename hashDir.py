@@ -52,7 +52,7 @@ def main():
     parser.add_argument('--verbose',action="store_true", 
     	                default=False, help="Be verbose")
     parser.add_argument('--version', action='version', 
-    	                version='%(prog)s 1.0')
+    	                version='%(prog)s 0.1')
     args = parser.parse_args()
     
     # Do Furtive stuff
