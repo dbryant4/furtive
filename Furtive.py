@@ -45,6 +45,7 @@ class Furtive:
             self.conn = sqlite3.connect(self.manifest_file)
             os.chdir(old_cwd)
             self.cur = self.conn.cursor()
+            self.conn.text_factory = sqlite3.OptimizedUnicode
             self.cur.execute("CREATE TABLE IF NOT EXISTS filehashes(filename TEXT, hash TEXT)")
         except:
             raise
@@ -211,7 +212,7 @@ class Furtive:
         # Try to insert hashes in DB
         try:
             for file, hash in hashed_file_list.iteritems():
-                self.cur.execute('INSERT INTO filehashes VALUES (?,?)',(file, hash));
+                self.cur.execute('INSERT INTO filehashes VALUES (?,?)',(file.decode('utf-8'), hash));
                 if self.verbose == True:
                     sys.stderr.write("Inserted Hash in DB for: " + file + "\n")
         except sqlite3.Error, e:
