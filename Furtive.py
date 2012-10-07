@@ -46,9 +46,8 @@ class Furtive:
             os.chdir(old_cwd)
             self.cur = self.conn.cursor()
             self.cur.execute("CREATE TABLE IF NOT EXISTS filehashes(filename TEXT, hash TEXT)")
-        except sqlite3.Error, e:
-            print "Error %s: %s" % (e.args[0],os.path.join(self.dir, self.manifest_file))
-            sys.exit(1)
+        except:
+            raise
 
     def __closeDB(self):
         """
@@ -92,7 +91,7 @@ class Furtive:
         
         try:
             hashlib.new(algorithm)
-        except ValueError, e: 
+        except: 
             raise
         else:
             self.hash_algorithm = algorithm
@@ -183,7 +182,9 @@ class Furtive:
             self.cur.execute("SELECT * FROM filehashes");
         except sqlite3.Error, e:
             sys.stderr.write("Error " + e.args[0] + ":\n")
-            sys.exit(1)
+            raise
+        except:
+            raise
         else:
             fetched_hashes = self.cur.fetchall()
             # Fetch rows and place in a dict we can use
@@ -215,7 +216,9 @@ class Furtive:
                     sys.stderr.write("Inserted Hash in DB for: " + file + "\n")
         except sqlite3.Error, e:
             sys.stderr.write("Error " + e.args[0] + ":\n")
-            sys.exit(1)
+            raise
+        except:
+            raise
         self.__closeDB()
 
     def compare(self):

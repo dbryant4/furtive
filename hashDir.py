@@ -9,7 +9,7 @@ except ImportError:
     print "Installation can also be attempted with:"
     print "\"easy_install argparse\""
     print "\"pip install argparse\""
-    sys.exit()
+    raise
 
 ''' '''
 
