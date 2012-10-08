@@ -208,8 +208,6 @@ class Furtive:
 
         self.__openDB()
         self.__truncateDB()
-        if hashed_file_list is None:
-            hashed_file_list = self.hashList
 
         # Try to insert hashes in DB
         try:
