@@ -45,7 +45,7 @@ class Furtive:
             self.conn = sqlite3.connect(self.manifest_file)
             os.chdir(old_cwd)
             self.cur = self.conn.cursor()
-            self.conn.text_factory = sqlite3.OptimizedUnicode
+            self.conn.text_factory = str
             self.cur.execute("CREATE TABLE IF NOT EXISTS filehashes(filename TEXT, hash TEXT)")
         except:
             raise
