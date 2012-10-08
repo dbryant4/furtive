@@ -48,7 +48,7 @@ class FurryTest(unittest.TestCase):
 
         # Compare hashes again
         self.fur.compare() 
-
+       
         # Number of unchanged files should equal expected_hashes
         self.assertTrue(len(self.expected_hashes) == len(self.fur.unchanged))
 
@@ -61,6 +61,58 @@ class FurryTest(unittest.TestCase):
         for file, hash in self.expected_hashes.iteritems():
             self.assertTrue(hash == self.fur.hashes[file])
 
+    def test_manifest_change(self):
+    	test_file = os.path.join(sys.path[0], "test-data", "test-file")
+
+        self.fur.compare()
+        self.fur.update_manifest()
+
+        # Add file
+        f = open(test_file,"w")
+        f.write("Test Data\n")
+        f.close()
+
+        # Compare hashes again
+        self.fur.compare() 
+        self.fur.update_manifest()
+
+        # No files should have changed
+        self.assertTrue(len(self.expected_hashes) == len(self.fur.unchanged))
+        # should be 0 removed and changed files
+        self.assertTrue(len(self.fur.changed) == 0)
+        self.assertTrue(len(self.fur.removed) == 0)
+        # should be one added file
+        self.assertTrue(len(self.fur.added) == 1)
+
+        # Next, make a change to the file
+        f = open(test_file,"w")
+        f.write("Test Data That has changed\n")
+        f.close()
+
+        self.fur.compare()
+        self.fur.update_manifest() 
+
+        # No files should have changed
+        self.assertTrue(len(self.expected_hashes) == len(self.fur.unchanged))
+        # should be 0 removed and changed files
+        self.assertTrue(len(self.fur.changed) == 1)
+        self.assertTrue(len(self.fur.removed) == 0)
+        self.assertTrue(len(self.fur.added) == 0)
+
+        # Now remove the file
+        os.remove(test_file)
+        self.assertFalse(os.path.isfile(test_file))
+        self.fur.compare()
+
+        # No files should have changed
+        self.assertTrue(len(self.expected_hashes) == len(self.fur.unchanged))
+        # should be 0 removed and changed files
+        self.assertTrue(len(self.fur.changed) == 0)
+        # One file should have been removed
+        self.assertTrue(len(self.fur.removed) == 1)
+        self.assertTrue(len(self.fur.added) == 0)
+
+         
     def tearDown(self):
         os.remove(os.path.join(sys.path[0], "test-data", self.fur.manifest_file))
         # Make sure manifest is deleted
