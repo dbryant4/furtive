@@ -121,6 +121,9 @@ class Furtive:
                 full_path = os.path.join(root, file)
                 # Reative to dir (ex rc.d/rc.1/test)
                 relative_path = os.path.relpath(full_path, dir)
+                # Skip manifest file
+                if relative_path == self.manifest_file:
+                    continue
                 if self.verbose == True:
                     sys.stderr.write("Found File: " + relative_path + "\n")
                 file_set.add(relative_path)
@@ -206,8 +209,6 @@ class Furtive:
 
         self.__openDB()
         self.__truncateDB()
-        if hashed_file_list is None:
-            hashed_file_list = self.hashList
 
         # Try to insert hashes in DB
         try:
