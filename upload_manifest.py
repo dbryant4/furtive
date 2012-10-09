@@ -10,6 +10,7 @@ import time
 from Furtive import Furtive
 
 try:
+        import boto
 	import boto.glacier
 	import boto.glacier.layer2
 except ImportError:
@@ -17,6 +18,7 @@ except ImportError:
 	print " below to install boto:\n"
 	print "\"easy_install boto\""
 	print "\"pip install boto\""
+        raise
 
 try:
     import argparse
