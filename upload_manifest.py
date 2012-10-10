@@ -4,7 +4,7 @@ upload_manifest.py
 Uploads the files in a manifest to Amazon Glacier. 
 
 """
-
+import os
 import sys
 import time
 from Furtive import Furtive
@@ -33,6 +33,7 @@ except ImportError:
 
 def main():
     start_time = time.time()
+    old_cwd = os.getcwd()
 
     region_names = ""
     for i in boto.glacier.regions(): 
@@ -83,26 +84,20 @@ def main():
     
     file_num = 0
     total_num_files = len(hashes)
+    os.chdir(args.dir)
 
     for file in hashes.keys():
         if args.show_progress:
             file_num = file_num + 1
+            print "\n",file, os.path.getsize(file)
             progress = round((float(file_num) / total_num_files) * 100,1)
             sys.stdout.write("\r" + str(progress) + "% " + 
                              str(file_num) + " of " + str(total_num_files))
             sys.stdout.flush()
-        try:
-            f = open(file,"r")
-        except IOError, e:
-        	print "Skipping %s due to error %s" % (file, e)
-        else:
-            vault.create_archive_from_file(file,f)
-            f.close()
+            vault.upload_archive(file)
     
     #Upload Manifest DB
-    f = open(fur.manifest_file,"r")
-    vault.create_archive_from_file(fur.manifest_file,f)
-    f.close()
+    vault.upload_archive(fur.manifest_file)
     
     end_time = time.time()
 
