@@ -94,7 +94,15 @@ def main():
             sys.stdout.write("\r" + str(progress) + "% " + 
                              str(file_num) + " of " + str(total_num_files))
             sys.stdout.flush()
-            vault.upload_archive(file)
+        attempt = 1
+        while attempt < 5:
+            try:
+                vault.upload_archive(file)
+            except UnexpectedHTTPResponseError, e:
+                attempt = attempt + 1
+                continue
+            break
+
     
     #Upload Manifest DB
     vault.upload_archive(fur.manifest_file)
