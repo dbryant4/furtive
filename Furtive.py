@@ -149,15 +149,26 @@ class Furtive:
             # Full file path (ex. /etc/rc.d/rc.1/test)
             full_path = os.path.join(self.dir, file)
             
-	    # Open file, read it, hash it, place hash in 
+            total_size = os.path.getsize(full_path)
+
+            # Open file, read it, hash it, place hash in 
             with open(full_path,'r') as f:
                 #m = hashlib.sha1()
                 m = hashlib.new(self.hash_algorithm)
+                loops = 0
                 while True:
                     chunk = f.read(m.block_size)
                     if not chunk:
                        break
                     m.update(chunk)
+                    loops = loops + 1
+                    if self.show_progress_indicator:
+                        file_progress = round((float(loops) * float(m.block_size)) / total_size * 100,1)
+                        sys.stdout.write("\r" + str(progress) + "% " + 
+                            str(file_num) + " of " + str(total_num_files) + 
+                            " File: " + str(file_progress) + "%  ")
+                        sys.stdout.flush()
+
             hash = m.hexdigest()
 	    if self.verbose == True:
 	        sys.stderr.write(hash + " " + file + "\n")
