@@ -100,6 +100,7 @@ def main():
                 vault.upload_archive(file)
             except UnexpectedHTTPResponseError, e:
                 attempt = attempt + 1
+                print "Error Uploading %s. Retry %s. Error Deatils %s" % (file,str(attempt),e)
                 continue
             break
 
