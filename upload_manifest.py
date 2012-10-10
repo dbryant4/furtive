@@ -85,6 +85,7 @@ def main():
     file_num = 0
     total_num_files = len(hashes)
     os.chdir(args.dir)
+    failed_uploads = []
 
     for file in hashes.keys():
         if args.show_progress:
@@ -102,6 +103,8 @@ def main():
                 attempt = attempt + 1
                 print "Error Uploading %s. Retry %s. Error Deatils %s" % (file,str(attempt),e)
                 continue
+            print "Tried to upload %s times. Too many errors. Bailing out. (%s)." % (str(attempt),file)
+            failed_uploads.append(file)
             break
 
     
@@ -115,6 +118,10 @@ def main():
     
     print "Finished uploading files to the vault %s" % (args.vault_name)
     print "Time taken: %s seconds" % (str(end_time - start_time))
+    if len(failed_uploads) > 0:
+        print "Failed to upload the following files:"
+        for file in failed_uploads:
+            print "    %s" % file
 
 if __name__ == "__main__":
     main()
