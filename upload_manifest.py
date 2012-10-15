@@ -10,14 +10,14 @@ import time
 from Furtive import Furtive
 
 try:
-        import boto
-	import boto.glacier
-	import boto.glacier.layer2
+    import boto
+    import boto.glacier
+    import boto.glacier.layer2
 except ImportError:
-	print "boto must be installed to use this script. Run one of the commands"
-	print " below to install boto:\n"
-	print "\"easy_install boto\""
-	print "\"pip install boto\""
+    print "boto must be installed to use this script. Run one of the commands"
+    print " below to install boto:\n"
+    print "\"easy_install boto\""
+    print "\"pip install boto\""
         raise
 
 try:
@@ -35,9 +35,9 @@ def main():
     start_time = time.time()
     old_cwd = os.getcwd()
 
-    region_names = ""
+    glacier_region_names = ""
     for i in boto.glacier.regions(): 
-        region_names = region_names + i.name + " "
+        glacier_region_names = glacier_region_names + i.name + " "
 
     parser = argparse.ArgumentParser(description='Upload a manifest to Amazon Glacier or S3')
     parser.add_argument('--dir', action="store", default=".", 
@@ -45,16 +45,16 @@ def main():
     parser.add_argument('--aws-secret-access-key', action="store", required=True, help="Your AWS Secret Key")
     parser.add_argument('--aws-access-key-id', action="store", required=True, help="Your AWS Access Key ID")
     parser.add_argument('--vault-name', action="store", required=True, help="Name of the new vault")
-    parser.add_argument('--region', action="store", required=True, help="""Glacier region to connect to. 
-    	                 Available regions: """ + region_names
-    	                )
+    parser.add_argument('--glacier-region', action="store", required=True, help="""Glacier region to connect to. 
+                         Available regions: """ + glacier_region_names
+                        )
     parser.add_argument('--show-progress',action="store_true", 
                         default=False, help='''When this flag is present,
                                                a progress indicator will
                                                show on STDOUT. 
                                                Default: False''')
     parser.add_argument('--manifest', action="store", dest="manifest", 
-    	                default='.manifest.db', 
+                        default='.manifest.db', 
                         help='''Location of the manifast file. Manifests may 
                                 be located outside the directory indicated by 
                                 --dir. Must provide path and filename of 
@@ -63,7 +63,7 @@ def main():
 
     layer2 = boto.glacier.layer2.Layer2(aws_access_key_id=args.aws_access_key_id, 
                                         aws_secret_access_key=args.aws_secret_access_key,
-                                        region_name=args.region)
+                                        region_name=args.glacier_region)
 
     try:
         fur = Furtive(args.dir)
