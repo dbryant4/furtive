@@ -79,7 +79,8 @@ def main():
     except boto.exception.S3CreateError, e:
     	raise
     try:
-        bucket = conn.create_bucket(args.bucket_name, location=Location.USWest2)
+        #bucket = conn.create_bucket(args.bucket_name, location=Location.USWest)
+        bucket = conn.create_bucket(args.bucket_name)
     except boto.exception.S3CreateError, e:
     	print "Bucket already exists. Adding files to existing bucket."
     	bucket = conn.lookup(args.bucket_name)
@@ -100,20 +101,23 @@ def main():
             sys.stdout.write("\r" + str(progress) + "% " + 
                              str(file_num) + " of " + str(total_num_files))
             sys.stdout.flush()
-        attempt = 1
-        k = Key(bucket)
+        attempt = 0
        
-        k.key = file
+        # Try to upload 5 times, then skip file but report later.
         while attempt < 5:
             try:
+                k = Key(bucket)
+                k.key = file
                 k.set_contents_from_filename(file)
-            except boto.exception.UnexpectedHTTPResponseError, e:
+            except: # catch *all* exceptions 
+                e = sys.exc_info()[0]
                 attempt = attempt + 1
-                print "Error Uploading %s. Retry %s. Error Deatils %s" % (file,str(attempt),e)
+                print "Error Uploading %s. Retry %s. Error Details: %s" % (file,str(attempt), e)
                 continue
             if attempt >= 5:
                 print " Tried to upload %s times. Too many errors. Bailing out. (%s)." % (str(attempt),file),
                 failed_uploads.append(file)
+                raise
             k.change_storage_class(args.storage_class)
             break
 
