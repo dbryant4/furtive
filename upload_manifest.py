@@ -99,10 +99,6 @@ def main():
         while attempt < 5:
             try:
                 vault.upload_archive(file)
-            except UnexpectedHTTPResponseError, e:
-                attempt = attempt + 1
-                print "Error Uploading %s. Retry %s. Error Deatils %s" % (file,str(attempt),e)
-                continue
             except: # catch *all* exceptions
                 e = sys.exc_info()[0]
                 print "Error Uploading %s. Retry %s. Error Deatils %s" % (file,str(attempt),e)
