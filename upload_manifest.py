@@ -95,7 +95,7 @@ def main():
             sys.stdout.write("\r" + str(progress) + "% " + 
                              str(file_num) + " of " + str(total_num_files))
             sys.stdout.flush()
-        attempt = 1
+        attempt = 0
         while attempt < 5:
             try:
                 vault.upload_archive(file)
@@ -103,6 +103,11 @@ def main():
                 attempt = attempt + 1
                 print "Error Uploading %s. Retry %s. Error Deatils %s" % (file,str(attempt),e)
                 continue
+            except: # catch *all* exceptions
+                e = sys.exc_info()[0]
+                print "Error Uploading %s. Retry %s. Error Deatils %s" % (file,str(attempt),e)
+                continue
+
             print "Tried to upload %s times. Too many errors. Bailing out. (%s)." % (str(attempt),file)
             failed_uploads.append(file)
             break
