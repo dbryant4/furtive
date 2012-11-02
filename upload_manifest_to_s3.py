@@ -11,6 +11,7 @@ try:
     from boto.s3.connection import S3Connection
     from boto.s3.connection import Location
     from boto.s3.key import Key
+    from boto.s3.lifecycle import Lifecycle
 except ImportError:
     print "boto must be installed to use this script. Run one of the commands"
     print " below to install boto:\n"
@@ -55,6 +56,10 @@ def main():
                         default='REDUCED_REDUNDANCY', 
                         help='''Storage class to use. Available options: STANDARD and REDUCED_REDUNDANCY
                                 Default: REDUCED_REDUNDANCY''')
+    parser.add_argument('--lifecycle', action="store", 
+                        default='0', 
+                        help='''Number of days until this bucket automatically removes itself from S3. 
+                                Default: Never''')
 
     args = parser.parse_args()
 
@@ -88,6 +93,18 @@ def main():
 
     # Staticly set ACL
     bucket.set_acl('private')
+
+    # Set lifecycle if lifecycle is provided as an command line argument
+    try:
+        int(args.lifecycle)
+    except ValueError, e:
+        print "--lifecycle must be an integer greater than 0"
+        raise
+
+    if int(args.lifecycle) > 0:
+        lifecycle_config = Lifecycle()
+        lifecycle_config.add_rule('furtive_lc_rule_1', '/', 'Enabled', int(args.lifecycle))
+        bucket.configure_lifecycle(lifecycle_config)
 
     file_num = 0
     total_num_files = len(hashes)
