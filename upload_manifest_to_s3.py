@@ -135,7 +135,12 @@ def main():
                 print " Tried to upload %s times. Too many errors. Bailing out. (%s)." % (str(attempt),file),
                 failed_uploads.append(file)
                 raise
-            k.change_storage_class(args.storage_class)
+            # Try to change storage class. Skip on error
+            try:
+                k.change_storage_class(args.storage_class)
+            except:
+                print "Error setting storage class for %s" % (file)
+                continue
             break
 
     
