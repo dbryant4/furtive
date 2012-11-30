@@ -103,8 +103,8 @@ def main():
 
     if int(args.lifecycle) > 0:
         lifecycle_config = Lifecycle()
-        lifecycle_config.add_rule('furtive_lc_rule_1', '/', 'Enabled', int(args.lifecycle))
         bucket.configure_lifecycle(lifecycle_config)
+        lifecycle_config.add_rule('furtive_del_rule_1', '', 'Enabled', int(args.lifecycle))
 
     file_num = 0
     total_num_files = len(hashes)
