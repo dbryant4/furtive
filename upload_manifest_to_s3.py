@@ -1,5 +1,5 @@
 '''
-Uploads a directory to s3
+Uploads a manifest to s3
 '''
 import os
 import sys
@@ -126,8 +126,7 @@ def main():
                 k = Key(bucket)
                 k.key = file
                 k.set_contents_from_filename(file)
-            except: # catch *all* exceptions 
-                e = sys.exc_info()[0]
+            except Exception as e: # catch *all* exceptions 
                 attempt = attempt + 1
                 print "Error Uploading %s. Retry %s. Error Details: %s" % (file,str(attempt), e)
                 continue
