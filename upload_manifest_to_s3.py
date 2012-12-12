@@ -12,6 +12,8 @@ try:
     from boto.s3.connection import Location
     from boto.s3.key import Key
     from boto.s3.lifecycle import Lifecycle
+    #from boto.s3.lifecycle import Transition
+    from boto.s3.lifecycle import Rule
 except ImportError:
     print "boto must be installed to use this script. Run one of the commands"
     print " below to install boto:\n"
@@ -63,6 +65,10 @@ def main():
                         default='0', 
                         help='''Number of days until this bucket automatically removes itself from S3. 
                                 Default: Never''')
+    parser.add_argument('--glacier-transition', action="store", 
+                        default='0', 
+                        help='''Number of days until this bucket automatically transitions to the Glacier storage class. 
+                                Default: Never''')
 
     args = parser.parse_args()
 
@@ -103,11 +109,21 @@ def main():
     except ValueError, e:
         print "--lifecycle must be an integer greater than 0"
         raise
+    try:
+        int(args.glacier_transition)
+    except ValueError, e:
+        print "--glacier-transition must be an integer greater than 0"
+        raise
 
+    lifecycle_config = Lifecycle()
     if int(args.lifecycle) > 0:
-        lifecycle_config = Lifecycle()
-        bucket.configure_lifecycle(lifecycle_config)
         lifecycle_config.add_rule('furtive_del_rule_1', '', 'Enabled', int(args.lifecycle))
+    #if int(args.glacier_transition) > 0: # Glacier Transition not stupported yet. Waiting for boto
+	#glacier_transition = Transition(int(args.glacier_transition), None, 'GLACIER')
+        #glacier_rule = Rule('furtive_glacier_rule_1','','Enabled',int(args.glacier_transition), glacier_transition)
+        #lifecycle_config.add_rule('furtive_glacier_rule_1', '', 'Enabled', int(args.glacier_transition))
+    bucket.configure_lifecycle(lifecycle_config)
+
 
     file_num = 0
     total_num_files = len(hashes)
