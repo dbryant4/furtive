@@ -20,8 +20,9 @@ def main():
     	                         checked. Default: .''')
     parser.add_argument('--hashes', action="store", dest="hashes", default=[''], 
                         help="Hash algorithm to use. Currently supports sha1 only.")
-    parser.add_argument('--exclude', action="store", dest="excludes", default=[''], 
-                        help="Patterns to exclude files and directories from manifest.")
+    parser.add_argument('--exclude', action="store", nargs='*', dest="excludes", default=[], 
+                        help='''Patterns to exclude files and directories from manifest.
+                                Can have multiple occurances of this flag.''')
     parser.add_argument('--manifest', action="store", dest="manifest", 
     	                default='.manifest.db', 
                         help='''Location of the manifast file. Manifests may 
@@ -59,7 +60,7 @@ def main():
     hashes = Furtive(args.dir, args.verbose) # Create new Furtive object with dir
     hashes.show_progress(args.show_progress) # Show progress while computing
     hashes.set_manifest(args.manifest) # Set manifest file. Optional
-    hashes.compare() # Tell Furtive to compare hashes
+    hashes.compare(args.excludes) # Tell Furtive to compare hashes
     
     if args.show_progress:
         print "\n",

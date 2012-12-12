@@ -52,6 +52,9 @@ def main():
                                 be located outside the directory indicated by 
                                 --dir. Must provide path and filename of 
                                 the manifest file. Default: DIR/.manifest.db''')
+    parser.add_argument('--exclude', action="store", nargs='*', dest="excludes", default=[],
+                        help='''Patterns to exclude files and directories from manifest.
+                                Can have multiple occurances of this flag.''')
     parser.add_argument('--storage-class', action="store", 
                         default='REDUCED_REDUNDANCY', 
                         help='''Storage class to use. Available options: STANDARD and REDUCED_REDUNDANCY

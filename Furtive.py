@@ -8,6 +8,7 @@ import os
 import hashlib
 import sys
 import sqlite3
+import fnmatch
 
 class Furtive:
     """
@@ -106,9 +107,12 @@ class Furtive:
 
         self.show_progress_indicator = progress
 
-    def get_files(self, dir=None):
+    def get_files(self, dir=None, excludes=[]):
         """
         Generate a set consisting of files relative to the given dir.
+            dir: Directory to use as the root of the manifest
+            excludes: Optional dictionary of file patterns to exclude. 
+                      These patterns are matched to the absolute path.
         """
 
         if dir is None:
@@ -126,7 +130,14 @@ class Furtive:
                     continue
                 if self.verbose == True:
                     sys.stderr.write("Found File: " + relative_path + "\n")
-                file_set.add(relative_path)
+                # Skip excludes. Can be improved...
+                for exclude in excludes:
+                    if fnmatch.fnmatch(full_path,exclude):
+                        # Add log message saying skiped file due to exclusion
+                        break
+                else:
+                    file_set.add(relative_path)
+                    # Add message saying added file to file set
         return file_set
     
     def hash_files(self, file_set):
@@ -234,13 +245,13 @@ class Furtive:
             raise
         self.__closeDB()
 
-    def compare(self):
+    def compare(self, excludes=[]):
         """ Tell Furtive to hash the files in the provided dir and 
             then compare them with the previous hashes 
         """ 
 
         # Get set of files on file system
-        self.file_list = self.get_files()
+        self.file_list = self.get_files(self.dir,excludes)
         
         # Hash files and place within object
         self.hashes = self.hash_files(self.file_list)

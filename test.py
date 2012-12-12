@@ -7,6 +7,7 @@ import unittest
 from Furtive import Furtive
 
 class FurryTest(unittest.TestCase):
+    excludes = ['*/exclude_me.txt']
 
     def setUp(self):
         self.fur = Furtive(os.path.join(sys.path[0], "test-data"))
@@ -19,7 +20,7 @@ class FurryTest(unittest.TestCase):
                                } 
 
     def test_compare(self):
-        self.fur.compare()
+        self.fur.compare(self.excludes)
 
         # Compare number of files in each hash list
         self.assertTrue(len(self.expected_hashes) == len(self.fur.hashes))
@@ -36,18 +37,18 @@ class FurryTest(unittest.TestCase):
         self.assertTrue(len(self.fur.unchanged) == 0)
 
     def test_manifest_update(self):
-        self.fur.compare()
+        self.fur.compare(self.excludes)
         self.fur.update_manifest()
 
         # Make sure manifest is written and exists
         self.assertTrue(os.path.isfile(os.path.join(sys.path[0], "test-data", self.fur.manifest_file)))
 
     def test_previous_manifest(self):
-        self.fur.compare()
+        self.fur.compare(self.excludes)
         self.fur.update_manifest()
 
         # Compare hashes again
-        self.fur.compare() 
+        self.fur.compare(self.excludes) 
        
         # Number of unchanged files should equal expected_hashes
         self.assertTrue(len(self.expected_hashes) == len(self.fur.unchanged))
@@ -64,7 +65,7 @@ class FurryTest(unittest.TestCase):
     def test_manifest_change(self):
     	test_file = os.path.join(sys.path[0], "test-data", "test-file")
 
-        self.fur.compare()
+        self.fur.compare(self.excludes)
         self.fur.update_manifest()
 
         # Add file
@@ -73,7 +74,7 @@ class FurryTest(unittest.TestCase):
         f.close()
 
         # Compare hashes again
-        self.fur.compare() 
+        self.fur.compare(self.excludes) 
         self.fur.update_manifest()
 
         # No files should have changed
@@ -89,7 +90,7 @@ class FurryTest(unittest.TestCase):
         f.write("Test Data That has changed\n")
         f.close()
 
-        self.fur.compare()
+        self.fur.compare(self.excludes)
         self.fur.update_manifest() 
 
         # No files should have changed
@@ -102,7 +103,7 @@ class FurryTest(unittest.TestCase):
         # Now remove the file
         os.remove(test_file)
         self.assertFalse(os.path.isfile(test_file))
-        self.fur.compare()
+        self.fur.compare(self.excludes)
 
         # No files should have changed
         self.assertTrue(len(self.expected_hashes) == len(self.fur.unchanged))
