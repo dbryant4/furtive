@@ -35,7 +35,7 @@ def main():
     start_time = time.time()
     old_cwd = os.getcwd()
 
-    parser = argparse.ArgumentParser(description='Upload a manifest to Amazon Glacier or S3')
+    parser = argparse.ArgumentParser(description='Upload a manifest to Amazon S3')
     parser.add_argument('--dir', action="store", default=".", 
                          help='''Directory containing the manifest. Default: .''')
     parser.add_argument('--aws-secret-access-key', action="store", required=True, help="Your AWS Secret Key")
@@ -48,6 +48,8 @@ def main():
                                                Default: False''')
     parser.add_argument('--region',action='store', default="DEFAULT", help="""Region to store manifest. 
     	                 APNortheast', 'APSoutheast', 'DEFAULT', 'EU', 'SAEast', 'USWest', 'USWest2'""")
+    parser.add_argument('--upload-retry',action='store', default=5, type=int, help="""How many times to retry 
+    	                 uploading a file to S3 before giving up. Default: 5""")
     parser.add_argument('--manifest', action="store", dest="manifest", 
                         default='.manifest.db', 
                         help='''Location of the manifast file. Manifests may 
@@ -93,8 +95,8 @@ def main():
     except boto.exception.S3CreateError, e:
     	raise
     try:
-        #bucket = conn.create_bucket(args.bucket_name, location=Location.USWest)
-        bucket = conn.create_bucket(args.bucket_name)
+        bucket = conn.create_bucket(args.bucket_name, location=Location.USWest)
+        #bucket = conn.create_bucket(args.bucket_name)
     except boto.exception.S3CreateError, e:
     	print "Bucket already exists. Adding files to existing bucket."
     	bucket = conn.lookup(args.bucket_name)
@@ -139,8 +141,8 @@ def main():
             sys.stdout.flush()
         attempt = 0
        
-        # Try to upload 5 times, then skip file but report later.
-        while attempt < 5:
+        # Try to upload upload_retry times, then skip file but report later.
+        while attempt < args.upload_retry:
             try:
                 k = Key(bucket)
                 k.key = file
