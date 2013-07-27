@@ -45,3 +45,7 @@ Simple usage that does not save hash data: ```python hashDir.py --update-manifes
 Simple usage to print out a report of files that have been add, removed, and changed. Useful for a nightly email report: ```python hashDir.py --dir /path/to/archived/data --report-added -report-removed --report-changed```
 
 To hash and update menifest: ```python hashDir.py --manifest ~/test.manifest --update-manifest```
+
+Licensing
+=====
+LGPL
