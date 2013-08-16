@@ -9,6 +9,7 @@ import hashlib
 import sys
 import sqlite3
 import fnmatch
+import logging
 
 class Furtive:
     """
