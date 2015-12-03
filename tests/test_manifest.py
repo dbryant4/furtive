@@ -37,13 +37,15 @@ class TestManifest(unittest.TestCase):
         self.assertTrue(manifest.manifest is None)
         manifest.load()
 
-        print manifest.manifest
         self.assertEqual(manifest.manifest['test-data/documents/Important Document 1.odt'], 'd460a36805fb460c038d96723f206b20')
         self.assertEqual(manifest.manifest['test-data/documents/Important Presentation.odp'], '1911ec839cedcbf00739a7d3447ec3a3')
         self.assertEqual(manifest.manifest['test-data/pictures/Picture #1.jpg'], '6eec850e32622c0e33bdae08ced29e24')
         self.assertEqual(manifest.manifest['test-data/documents/exclude_me.txt'], '2e7d8cb32bb82e838506aff5600182d1')
         self.assertEqual(len(manifest.manifest), 4)
 
+    def tearDown(self):
+        if os.path.exists('.test_manifest.db'):
+            os.unlink('.test_manifest.db')
 
 if __name__ == '__main__':
     unittest.main()
