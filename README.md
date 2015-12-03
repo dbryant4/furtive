@@ -13,7 +13,7 @@ Requirements
 Getting Started
 ===============
 
-To install furtive, run `python setup.py`.
+To install furtive, run `python setup.py install`.
 
 Usage
 ======
