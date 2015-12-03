@@ -47,6 +47,7 @@ class Manifest(object):
             Open a sqlite3 database, truncate it, then write the manifest to it.
         """
 
+        logging.info('Saving manifest to %s' % self.manifest_file)
         logging.debug('Opening %s' % self.manifest_file)
         with sqlite3.connect(self.manifest_file) as connection:
             cursor = connection.cursor()
