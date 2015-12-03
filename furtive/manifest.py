@@ -31,7 +31,7 @@ class Manifest(object):
         logging.debug('Opening %s' % self.manifest_file)
         with sqlite3.connect(self.manifest_file) as connection:
             cursor = connection.cursor()
-            cursor.execute("SELECT * FROM filehashes");
+            cursor.execute('SELECT * FROM filehashes');
             manifest = cursor.fetchall()
 
         self.manifest = {}
@@ -48,15 +48,16 @@ class Manifest(object):
         with sqlite3.connect(self.manifest_file) as connection:
             cursor = connection.cursor()
             connection.text_factory = str
-            cursor.execute("CREATE TABLE IF NOT EXISTS filehashes(filename TEXT, hash TEXT)")
-            cursor.execute("DELETE FROM filehashes")
+            cursor.execute('CREATE TABLE IF NOT EXISTS filehashes\
+                            (filename TEXT, hash TEXT)')
+            cursor.execute('DELETE FROM filehashes')
             for file_name, md5_hash in self.manifest.iteritems():
                 logging.debug('Saving hash for %s' % file_name)
-                cursor.execute('INSERT INTO filehashes VALUES (?,?)',(file_name.decode('utf-8'), md5_hash));
+                cursor.execute('INSERT INTO filehashes VALUES (?,?)',
+                               (file_name.decode('utf-8'), md5_hash));
             connection.commit()
             cursor = None
         logging.debug('Manifest saved')
-
 
     def is_empty(self):
         """ Determines if the manifest within memory is empty.
