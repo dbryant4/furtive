@@ -1,4 +1,5 @@
 *.py[co]
+*furtivec
 
 # Packages
 *.egg
