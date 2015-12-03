@@ -3,3 +3,4 @@
 
 
 from .hasher import *
+from .manifest import Manifest
