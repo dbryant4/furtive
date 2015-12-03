@@ -8,6 +8,18 @@ from .hasher import *
 from .manifest import Manifest
 
 class Furtive(object):
+    """ Furtive is an application which stores file state and allows users to
+        verify the state in the future. Example use cases include file archives
+        and file transport.
+
+        :param base_dir: Base directory to use for the manifest. Can be a full
+                         or relative path.
+        :param type: str
+        :param manifest_path: Path to the manifest file. Can be a full or
+                              relative path.
+        :param type: str
+
+    """
 
     def __init__(self, base_dir, manifest_path):
         self.base_dir = base_dir
@@ -17,8 +29,9 @@ class Furtive(object):
         if os.path.exists(manifest_path):
             self.manifest.load()
 
-
     def create(self):
+        """ Create and save a new manifest. """
+
         self.manifest.create()
         self.manifest.save()
 
@@ -41,6 +54,5 @@ class Furtive(object):
         removed_files = list(set(self.manifest.manifest) - set(current_manifest.manifest))
         common_files = list(set(self.manifest.manifest) & set(current_manifest.manifest))
         changed_files = filter((lambda x: current_manifest.manifest[x] != self.manifest[x]), common_files)
-
 
         return {'removed': removed_files, 'added': added_files, 'changed': changed_files}
