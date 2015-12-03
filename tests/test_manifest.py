@@ -34,7 +34,7 @@ class TestManifest(unittest.TestCase):
         self.test_manifest_save()
 
         manifest = Manifest('test-data', '.test_manifest.db')
-        self.assertIs(manifest.manifest, None)
+        self.assertTrue(manifest.manifest ish None)
         manifest.load()
 
         print manifest.manifest
