@@ -1,4 +1,5 @@
 *.py[co]
+*furtivec
 
 # Packages
 *.egg
@@ -31,3 +32,6 @@ pip-log.txt
 
 # Apple Files
 .DS_Store
+
+# test artifacts
+.test_manifest.db
