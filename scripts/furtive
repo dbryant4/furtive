@@ -1,0 +1,47 @@
+#!/usr/bin/env python
+
+import yaml
+import logging
+import argparse
+
+from futive import Furtive
+
+
+def main():
+    action_help = ''' Which action to perform:
+      check - check the integrity of files listed in the manifest.
+      create - create a new manifest from the files inthe directory
+               specified by the --basedir argument.
+    '''
+
+    parser = argparse.ArgumentParser(description='Hash files within a directory.')
+    parser.add_argument('--basedir', action='store', default='.',
+    	                 help='''Directory containing files that will be
+    	                         checked. Default: .''')
+    parser.add_argument('--manifest', action='store', dest='manifest_path',
+    	                default='.manifest.db',
+                        help='''Location of the manifest file. Manifests may
+                                be located outside the directory indicated by
+                                --basedir. Must provide path and filename of
+                                the manifest file. Default: .manifest.db''')
+    parser.add_argument('--log-level', action='store', dest='log_level',
+                        choices=('debug', 'info', 'warn', 'error', 'critical'),
+                        default='info')
+    parser.add_argument('action', choices=('create', 'compare'),
+                        help=action_help,
+                        nargs=1)
+    args = parser.parse_args()
+
+    numeric_level = getattr(logging, args.log_level.upper(), None)
+    logging.basicConfig(level=numeric_level)
+
+    furtive = Furtive(args.basedir, args.manifest_file)
+
+    if args.action == 'create':
+        furtive.create()
+    elif args.action == 'compare':
+        changes = furtive.compare()
+        print yaml.dumps(changes)
+
+if __name__ == '__main__':
+    main()
