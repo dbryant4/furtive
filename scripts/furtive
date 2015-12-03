@@ -4,7 +4,7 @@ import yaml
 import logging
 import argparse
 
-from futive import Furtive
+from furtive import Furtive
 
 
 def main():
