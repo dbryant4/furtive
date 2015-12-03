@@ -13,6 +13,9 @@ class Manifest(object):
         self.manifest_file = manifest_file
         self.manifest = None
 
+    def __getitem__(self, file):
+        return self.manifest[file]
+
     def create(self):
         """ Creates a new manifest from the directory by calling
             furtive.hasher.HashDirectory() and placing the return dictionary
