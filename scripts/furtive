@@ -30,7 +30,9 @@ def parse_args(args):
     parser.add_argument('action', choices=('create', 'compare'),
                         help=action_help,
                         nargs=1)
-    return parser.parse_args(args)
+    parsed_args = parser.parse_args(args)
+    parsed_args.action = parsed_args.action.pop()
+    return parsed_args
 
 def main():
     args = parse_args(sys.argv[1:])
@@ -44,7 +46,7 @@ def main():
         furtive.create()
     elif args.action == 'compare':
         changes = furtive.compare()
-        print yaml.dump(changes, default_flow_style=False)
+        sys.stdout.write(yaml.dump(changes, default_flow_style=False))
 
 if __name__ == '__main__':
     main()
