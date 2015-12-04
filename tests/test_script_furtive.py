@@ -59,6 +59,21 @@ class TestScriptFurtive(unittest.TestCase):
         furtive.main()
 
         self.assertTrue('test-data/test-file' in mock_stdout.getvalue())
+        self.assertTrue('!!python/unicode' not in mock_stdout.getvalue())
+
+        args = 'app.py --basedir test-data --manifest .test_manifest.db create'
+        sys.argv = args.split()
+        furtive.main()
+
+        with open('test-data/test-file', 'w') as text_file:
+            text_file.write('This is a test file with changed content.')
+
+        args = 'app.py --basedir test-data --manifest .test_manifest.db compare'
+        sys.argv = args.split()
+        furtive.main()
+
+        self.assertTrue('test-data/test-file' in mock_stdout.getvalue())
+        self.assertTrue('!!python' not in mock_stdout.getvalue())
 
     def tearDown(self):
         if os.path.exists('.test_manifest.db'):

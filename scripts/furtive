@@ -46,7 +46,7 @@ def main():
         furtive.create()
     elif args.action == 'compare':
         changes = furtive.compare()
-        sys.stdout.write(yaml.dump(changes, default_flow_style=False))
+        sys.stdout.write(yaml.safe_dump(changes, default_flow_style=False))
 
 if __name__ == '__main__':
     main()
