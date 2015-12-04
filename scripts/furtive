@@ -37,8 +37,12 @@ def parse_args(args):
 def main():
     args = parse_args(sys.argv[1:])
 
+    log_format = '%(asctime)s [%(levelname)s]: %(message)s'
+    date_format = '%c %Z'
     numeric_level = getattr(logging, args.log_level.upper(), None)
-    logging.basicConfig(level=numeric_level)
+    logging.basicConfig(level=numeric_level,
+                        format=log_format,
+                        datefmt=date_format)
 
     furtive = Furtive(args.basedir, args.manifest_path)
 
