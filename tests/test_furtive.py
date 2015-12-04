@@ -8,7 +8,7 @@ from furtive import Furtive
 class TestFurtive(unittest.TestCase):
 
     def setUp(self):
-        self.furtive = Furtive('test-data', '.test_manifest.db')
+        self.furtive = Furtive('test-data', '.test_manifest.yaml')
         self.furtive.create()
 
     def test_furtive_create(self):
@@ -26,7 +26,7 @@ class TestFurtive(unittest.TestCase):
         with open('test-data/test-file', 'w') as text_file:
             text_file.write('This is a test file.')
 
-        furtive = Furtive('test-data', '.test_manifest.db')
+        furtive = Furtive('test-data', '.test_manifest.yaml')
         changes = furtive.compare()
 
         self.assertEqual(changes['added'], ['test-data/test-file'])
@@ -66,8 +66,8 @@ class TestFurtive(unittest.TestCase):
         self.assertEqual(changes['changed'], ['test-data/test-file'])
         
     def tearDown(self):
-        if os.path.exists('.test_manifest.db'):
-            os.unlink('.test_manifest.db')
+        if os.path.exists('.test_manifest.yaml'):
+            os.unlink('.test_manifest.yaml')
         if os.path.exists('test-data/test-file'):
             os.unlink('test-data/test-file')
 

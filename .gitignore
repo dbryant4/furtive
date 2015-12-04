@@ -34,4 +34,4 @@ pip-log.txt
 .DS_Store
 
 # test artifacts
-.test_manifest.db
+.test_manifest.yaml
