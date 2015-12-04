@@ -21,7 +21,7 @@ Suppose you have a million digital photos in a directory called `my-photos` that
 
 To record the current state of the files, run `furtive --basedir my-photos create`
 
-This command creates the file `.manifest.db` in the current working directory. The location and name of this file can be changed by using the `--manifest` argument.
+This command creates the file `.manifest.yaml` in the current working directory. The location and name of this file can be changed by using the `--manifest` argument.
 
 At this point, you can be sure that you will know if a file has changed. To check the files on the file system to the manifest, run `furtive --basedir my-photos compare`. The application will output a list of files which have been added, removed, or changed. This output is YAML format so it should be easy to parse.
 
