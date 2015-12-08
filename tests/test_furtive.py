@@ -8,7 +8,7 @@ from furtive import Furtive
 class TestFurtive(unittest.TestCase):
 
     def setUp(self):
-        self.furtive = Furtive('test-data', '.test_manifest.yaml')
+        self.furtive = Furtive('tests/fixtures/test-data', '.test_manifest.yaml')
         self.furtive.create()
 
     def test_furtive_create(self):
@@ -23,10 +23,10 @@ class TestFurtive(unittest.TestCase):
     def test_compare_added(self):
         """ Ensure comparison reports added files correctly """
 
-        with open('test-data/test-file', 'w') as text_file:
+        with open('tests/fixtures/test-data/test-file', 'w') as text_file:
             text_file.write('This is a test file.')
 
-        furtive = Furtive('test-data', '.test_manifest.yaml')
+        furtive = Furtive('tests/fixtures/test-data', '.test_manifest.yaml')
         changes = furtive.compare()
 
         self.assertEqual(changes['added'], ['test-file'])
@@ -36,12 +36,12 @@ class TestFurtive(unittest.TestCase):
     def test_compare_removed(self):
         """ Ensure comparison reports removed files correctly """
 
-        with open('test-data/test-file', 'w') as text_file:
+        with open('tests/fixtures/test-data/test-file', 'w') as text_file:
             text_file.write('This is a test file.')
 
         self.furtive.create()
 
-        os.unlink('test-data/test-file')
+        os.unlink('tests/fixtures/test-data/test-file')
         changes = self.furtive.compare()
 
         self.assertEqual(changes['added'], [])
@@ -51,12 +51,12 @@ class TestFurtive(unittest.TestCase):
     def test_compare_changed(self):
         """ Ensure comparison reports changed files correctly """
 
-        with open('test-data/test-file', 'w') as text_file:
+        with open('tests/fixtures/test-data/test-file', 'w') as text_file:
             text_file.write('This is a test file.')
 
         self.furtive.create()
 
-        with open('test-data/test-file', 'w') as text_file:
+        with open('tests/fixtures/test-data/test-file', 'w') as text_file:
             text_file.write('This file has been changed')
 
         changes = self.furtive.compare()
@@ -68,8 +68,8 @@ class TestFurtive(unittest.TestCase):
     def tearDown(self):
         if os.path.exists('.test_manifest.yaml'):
             os.unlink('.test_manifest.yaml')
-        if os.path.exists('test-data/test-file'):
-            os.unlink('test-data/test-file')
+        if os.path.exists('tests/fixtures/test-data/test-file'):
+            os.unlink('tests/fixtures/test-data/test-file')
 
 if __name__ == '__main__':
     unittest.main()

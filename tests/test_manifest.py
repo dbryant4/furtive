@@ -10,7 +10,7 @@ class TestManifest(unittest.TestCase):
     def test_manifest_create(self):
         """ Ensure a manifest can be generated from a directory """
 
-        manifest = Manifest('test-data', '.test_manifest.yaml')
+        manifest = Manifest('tests/fixtures/test-data', '.test_manifest.yaml')
         manifest.create()
 
         self.assertEqual(manifest['documents/Important Document 1.odt'], 'd460a36805fb460c038d96723f206b20')
@@ -22,7 +22,7 @@ class TestManifest(unittest.TestCase):
     def test_manifest_save(self):
         """ Ensure the manifest can be successfully saved to a sqllite db """
 
-        manifest = Manifest('test-data', '.test_manifest.yaml')
+        manifest = Manifest('tests/fixtures/test-data', '.test_manifest.yaml')
         manifest.create()
         manifest.save()
 
@@ -35,7 +35,7 @@ class TestManifest(unittest.TestCase):
 
         self.test_manifest_save()
 
-        manifest = Manifest('test-data', '.test_manifest.yaml')
+        manifest = Manifest('tests/fixtures/test-data', '.test_manifest.yaml')
         self.assertTrue(manifest.manifest is None)
         manifest.load()
 
