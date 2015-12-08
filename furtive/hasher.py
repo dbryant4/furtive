@@ -24,7 +24,13 @@ def hash_task(file_path):
 
     with open(file_path, 'r') as file_to_hash:
         logging.debug('Starting Hash of %s' % file_path)
-        file_hash = hashlib.md5(file_to_hash.read()).hexdigest()
+        hash_object = hashlib.new('md5')
+        while True:
+            chunk = file_to_hash.read(hash_object.block_size)
+            if not chunk:
+                break
+            hash_object.update(chunk)
+        file_hash = hash_object.hexdigest()
         logging.debug('Hash for %s: %s' % (file_path, file_hash))
     return {file_path: file_hash}
 
