@@ -58,7 +58,7 @@ class TestScriptFurtive(unittest.TestCase):
         sys.argv = args.split()
         furtive.main()
 
-        self.assertTrue('test-data/test-file' in mock_stdout.getvalue())
+        self.assertTrue('test-file' in mock_stdout.getvalue())
         self.assertTrue('!!python/unicode' not in mock_stdout.getvalue())
 
         args = 'app.py --basedir test-data --manifest .test_manifest.yaml create'
@@ -72,7 +72,7 @@ class TestScriptFurtive(unittest.TestCase):
         sys.argv = args.split()
         furtive.main()
 
-        self.assertTrue('test-data/test-file' in mock_stdout.getvalue())
+        self.assertTrue('test-file' in mock_stdout.getvalue())
         self.assertTrue('!!python' not in mock_stdout.getvalue())
 
     def tearDown(self):

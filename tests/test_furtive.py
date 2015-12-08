@@ -14,10 +14,10 @@ class TestFurtive(unittest.TestCase):
     def test_furtive_create(self):
         """ Ensure a manifest can be created """
 
-        self.assertEqual(self.furtive.manifest.manifest['test-data/documents/Important Document 1.odt'], 'd460a36805fb460c038d96723f206b20')
-        self.assertEqual(self.furtive.manifest.manifest['test-data/documents/Important Presentation.odp'], '1911ec839cedcbf00739a7d3447ec3a3')
-        self.assertEqual(self.furtive.manifest.manifest['test-data/pictures/Picture #1.jpg'], '6eec850e32622c0e33bdae08ced29e24')
-        self.assertEqual(self.furtive.manifest.manifest['test-data/documents/exclude_me.txt'], '2e7d8cb32bb82e838506aff5600182d1')
+        self.assertEqual(self.furtive.manifest.manifest['documents/Important Document 1.odt'], 'd460a36805fb460c038d96723f206b20')
+        self.assertEqual(self.furtive.manifest.manifest['documents/Important Presentation.odp'], '1911ec839cedcbf00739a7d3447ec3a3')
+        self.assertEqual(self.furtive.manifest.manifest['pictures/Picture #1.jpg'], '6eec850e32622c0e33bdae08ced29e24')
+        self.assertEqual(self.furtive.manifest.manifest['documents/exclude_me.txt'], '2e7d8cb32bb82e838506aff5600182d1')
         self.assertEqual(len(self.furtive.manifest.manifest), 4)
 
     def test_compare_added(self):
@@ -29,7 +29,7 @@ class TestFurtive(unittest.TestCase):
         furtive = Furtive('test-data', '.test_manifest.yaml')
         changes = furtive.compare()
 
-        self.assertEqual(changes['added'], ['test-data/test-file'])
+        self.assertEqual(changes['added'], ['test-file'])
         self.assertEqual(changes['removed'], [])
         self.assertEqual(changes['changed'], [])
 
@@ -45,7 +45,7 @@ class TestFurtive(unittest.TestCase):
         changes = self.furtive.compare()
 
         self.assertEqual(changes['added'], [])
-        self.assertEqual(changes['removed'], ['test-data/test-file'])
+        self.assertEqual(changes['removed'], ['test-file'])
         self.assertEqual(changes['changed'], [])
 
     def test_compare_changed(self):
@@ -63,7 +63,7 @@ class TestFurtive(unittest.TestCase):
 
         self.assertEqual(changes['added'], [])
         self.assertEqual(changes['removed'], [])
-        self.assertEqual(changes['changed'], ['test-data/test-file'])
+        self.assertEqual(changes['changed'], ['test-file'])
 
     def tearDown(self):
         if os.path.exists('.test_manifest.yaml'):
