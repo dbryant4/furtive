@@ -7,9 +7,6 @@ File Integrity Verification (furtive) aims to ensure long term data integrity ve
 
 .. toctree::
 
-   furtive.hasher
-   furtive.manifest
-
 -------------------
 
  .. automodule:: furtive
