@@ -1,4 +1,4 @@
-""" Test cases for HashTask object """
+""" Test cases for Furtive object """
 
 import os
 import unittest
@@ -64,7 +64,7 @@ class TestFurtive(unittest.TestCase):
         self.assertEqual(changes['added'], [])
         self.assertEqual(changes['removed'], [])
         self.assertEqual(changes['changed'], ['test-data/test-file'])
-        
+
     def tearDown(self):
         if os.path.exists('.test_manifest.yaml'):
             os.unlink('.test_manifest.yaml')

@@ -1,12 +1,15 @@
-""" Test cases for HashTask object """
+""" Test cases for HashDirectory object """
 
+import logging
 import unittest
 
-from furtive.hasher import HashTask, HashProcess, HashDirectory
+from furtive.hasher import HashDirectory
 
 class TestHashDirectory(unittest.TestCase):
     def test_hash_directory(self):
         """ Ensure HashDirectory will correctly hash all files in a directory """
+
+        logging.basicConfig(level=logging.DEBUG)
 
         hash_directory = HashDirectory('test-data')
 

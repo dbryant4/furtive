@@ -1,4 +1,4 @@
-""" Test cases for HashTask object """
+""" Test cases for furtive script """
 
 import os
 import sys
