@@ -23,8 +23,9 @@ install:
 venv-install: test
 	$(virtualenv_path)/bin/python setup.py install
 
-test: virtualenv package_install lint
-	$(virtualenv_path)/bin/nosetests --with-coverage --cover-package=furtive -v
+test: virtualenv package_install #lint
+	mkdir -p test-results
+	$(virtualenv_path)/bin/nosetests --with-coverage --cover-package=furtive -v --with-xunit --xunit-file=test-results/nosetests.xml
 
 lint: virtualenv package_install
 	pylint --rcfile=.pylintrc furtive scripts --ignore=tests,venv
@@ -34,6 +35,7 @@ package_install: virtualenv
 
 virtualenv:
 	test -d $(virtualenv_path) || virtualenv $(virtualenv_path)
+	$(virtualenv_path)/bin/pip install -U pip
 
 clean:
-	rm -rf furtive/*.pyc tests/*.pyc $(virtualenv_path) .coverage build docs/_build docs/_static
+	rm -rf furtive/*.pyc tests/*.pyc $(virtualenv_path) .coverage build docs/_build docs/_static test-results
