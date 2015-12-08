@@ -10,13 +10,21 @@ import logging
 import multiprocessing
 
 
-def hash_task(file_path):
+def hash_task(file_path, hash_algorithm='md5'):
     """ Responsible for hashing a file.
 
-        Currently, the hash is MD5.
+        This function reads in the file ``file_path`` in small chuncks the size
+        of the hash algorithm's block size in order to avoid running out of
+        memory. This means that this function should be able to read any file
+        irregardless of the size.
 
         :param file_path: path of file to hash
         :type file_path: str
+
+        :param hash_algorithm: the hashing algorithm to use. All options
+                               available in `hashlib.algorithms` should work.
+                               See https://docs.python.org/2/library/hashlib.html
+        :type hash_algorithm: str
 
         :return: hash of file
         :return type: dict
