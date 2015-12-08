@@ -1,4 +1,4 @@
-""" Test cases for HashTask object """
+""" Test cases for Manifest object """
 
 import os
 import unittest

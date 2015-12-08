@@ -5,7 +5,7 @@ import yaml
 import sqlite3
 import logging
 
-from furtive.hasher import HashTask, HashProcess, HashDirectory
+from furtive.hasher import HashDirectory
 
 class Manifest(object):
 
