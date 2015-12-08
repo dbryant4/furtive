@@ -1,5 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
+""" Furtive - File Integrity Verification System """
+
 
 import os
 import logging
@@ -14,10 +16,10 @@ class Furtive(object):
 
         :param base_dir: Base directory to use for the manifest. Can be a full
                          or relative path.
-        :param type: str
+        :type base_dir: str
         :param manifest_path: Path to the manifest file. Can be a full or
                               relative path.
-        :param type: str
+        :type manifest_path: str
 
     """
 
@@ -30,7 +32,12 @@ class Furtive(object):
             self.manifest.load()
 
     def create(self):
-        """ Create and save a new manifest. """
+        """ Create and save a new manifest.
+
+            The contents of the new Manfiest() will be saved to `manifest_path`.
+
+            :return: None
+        """
 
         self.manifest.create()
         self.manifest.save()

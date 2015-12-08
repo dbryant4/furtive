@@ -35,3 +35,11 @@ pip-log.txt
 
 # test artifacts
 .test_manifest.yaml
+
+venv
+.coverage
+docs/_build
+docs/_static
+docs/_templates
+.DS_Store
+test-results
