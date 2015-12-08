@@ -11,7 +11,7 @@ class TestHashDirectory(unittest.TestCase):
 
         logging.basicConfig(level=logging.DEBUG)
 
-        hash_directory = HashDirectory('test-data')
+        hash_directory = HashDirectory('tests/fixtures/test-data')
 
         results = hash_directory.hash_files()
 
@@ -25,8 +25,8 @@ class TestHashDirectory(unittest.TestCase):
     def test_hash_task(self):
         """ Ensure furtive.hasher.hash_task works as expected """
 
-        result = hash_task('test-data/documents/Important Document 1.odt')
-        self.assertEqual(result['test-data/documents/Important Document 1.odt'], 'd460a36805fb460c038d96723f206b20', msg=result)
+        result = hash_task('tests/fixtures/test-data/documents/Important Document 1.odt')
+        self.assertEqual(result['tests/fixtures/test-data/documents/Important Document 1.odt'], 'd460a36805fb460c038d96723f206b20', msg=result)
 
 if __name__ == '__main__':
     unittest.main()

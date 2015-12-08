@@ -17,16 +17,16 @@ class TestScriptFurtive(unittest.TestCase):
     def setUp(self):
         if os.path.exists('.test_manifest.yaml'):
             os.unlink('.test_manifest.yaml')
-        if os.path.exists('test-data/test-file'):
-            os.unlink('test-data/test-file')
+        if os.path.exists('tests/fixtures/test-data/test-file'):
+            os.unlink('tests/fixtures/test-data/test-file')
 
     def test_parse_args(self):
         """ Ensure parsing of proper arguments """
 
-        args = '--basedir test-data --manifest .test_manifest.yaml create'
+        args = '--basedir tests/fixtures/test-data --manifest .test_manifest.yaml create'
         parsed_args = furtive.parse_args(args.split())
 
-        self.assertEqual(parsed_args.basedir, 'test-data')
+        self.assertEqual(parsed_args.basedir, 'tests/fixtures/test-data')
         self.assertEqual(parsed_args.manifest_path, '.test_manifest.yaml')
         self.assertEqual(parsed_args.action, 'create')
         self.assertEqual(parsed_args.log_level, 'info')
@@ -35,7 +35,7 @@ class TestScriptFurtive(unittest.TestCase):
     def test_create(self):
         """ Ensure a manifest can be created using the furtive script """
 
-        args = 'app.py --basedir test-data --manifest .test_manifest.yaml create'
+        args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml create'
         sys.argv = args.split()
 
         furtive.main()
@@ -46,29 +46,29 @@ class TestScriptFurtive(unittest.TestCase):
     def test_compare(self, mock_stdout):
         """ Ensure a manifest can be compared to current files """
 
-        args = 'app.py --basedir test-data --manifest .test_manifest.yaml create'
+        args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml create'
         sys.argv = args.split()
 
         furtive.main()
 
-        with open('test-data/test-file', 'w') as text_file:
+        with open('tests/fixtures/test-data/test-file', 'w') as text_file:
             text_file.write('This is a test file.')
 
-        args = 'app.py --basedir test-data --manifest .test_manifest.yaml compare'
+        args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml compare'
         sys.argv = args.split()
         furtive.main()
 
         self.assertTrue('test-file' in mock_stdout.getvalue())
         self.assertTrue('!!python/unicode' not in mock_stdout.getvalue())
 
-        args = 'app.py --basedir test-data --manifest .test_manifest.yaml create'
+        args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml create'
         sys.argv = args.split()
         furtive.main()
 
-        with open('test-data/test-file', 'w') as text_file:
+        with open('tests/fixtures/test-data/test-file', 'w') as text_file:
             text_file.write('This is a test file with changed content.')
 
-        args = 'app.py --basedir test-data --manifest .test_manifest.yaml compare'
+        args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml compare'
         sys.argv = args.split()
         furtive.main()
 
@@ -78,8 +78,8 @@ class TestScriptFurtive(unittest.TestCase):
     def tearDown(self):
         if os.path.exists('.test_manifest.yaml'):
             os.unlink('.test_manifest.yaml')
-        if os.path.exists('test-data/test-file'):
-            os.unlink('test-data/test-file')
+        if os.path.exists('tests/fixtures/test-data/test-file'):
+            os.unlink('tests/fixtures/test-data/test-file')
 
 if __name__ == '__main__':
     unittest.main()
