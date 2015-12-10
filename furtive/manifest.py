@@ -1,21 +1,33 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
+""" Manifest of files and their hashes """
 
 import yaml
-import sqlite3
 import logging
 
 from furtive.hasher import HashDirectory
 
+
 class Manifest(object):
+    """ Manifest of files and the associated hashes.
+
+        :param directory: directory which will serve as the root for the
+                          manifest. All files under the directory will be
+                          hashed and added to or compared with the manifest.
+        :param type: str
+        :param manifest_file: file location of the manifest file. This is the
+                              path which will be used for the ``create()`` and
+                              ``compare()`` methods. If the file exists, the
+                              ``create()`` method will overwrite it.
+    """
 
     def __init__(self, directory, manifest_file):
         self.directory = directory
         self.manifest_file = manifest_file
         self.manifest = None
 
-    def __getitem__(self, file):
-        return self.manifest[file]
+    def __getitem__(self, hashed_file):
+        return self.manifest[hashed_file]
 
     def create(self):
         """ Creates a new manifest from the directory by calling
@@ -32,15 +44,7 @@ class Manifest(object):
             the `manifest` object variable.
         """
 
-        logging.debug('Opening %s' % self.manifest_file)
-        # with sqlite3.connect(self.manifest_file) as connection:
-        #     cursor = connection.cursor()
-        #     cursor.execute('SELECT * FROM filehashes');
-        #     manifest = cursor.fetchall()
-        #
-        # self.manifest = {}
-        # for x in manifest:
-        #     self.manifest[x[0]] = x[1]
+        logging.debug('Opening %s', self.manifest_file)
         with open(self.manifest_file, 'r') as manifest_file:
             self.manifest = yaml.load(manifest_file.read())
 
@@ -50,23 +54,11 @@ class Manifest(object):
             Open a YAML file and dump the contents of the manifest to it.
         """
 
-        logging.info('Saving manifest to %s' % self.manifest_file)
-        logging.debug('Opening %s' % self.manifest_file)
-        # with sqlite3.connect(self.manifest_file) as connection:
-        #     cursor = connection.cursor()
-        #     connection.text_factory = str
-        #     cursor.execute('CREATE TABLE IF NOT EXISTS filehashes\
-        #                     (filename TEXT, hash TEXT)')
-        #     cursor.execute('DELETE FROM filehashes')
-        #     for file_name, md5_hash in self.manifest.iteritems():
-        #         logging.debug('Saving hash for %s' % file_name)
-        #         cursor.execute('INSERT INTO filehashes VALUES (?,?)',
-        #                        (file_name.decode('utf-8'), md5_hash));
-        #     connection.commit()
-        #     cursor = None
+        logging.info('Saving manifest to %s', self.manifest_file)
+        logging.debug('Opening %s', self.manifest_file)
         with open(self.manifest_file, 'w') as manifest_file:
             manifest_file.write(yaml.safe_dump(self.manifest,
-                                default_flow_style=False))
+                                               default_flow_style=False))
 
         logging.debug('Manifest saved')
 
