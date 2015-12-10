@@ -7,6 +7,7 @@ import logging
 
 from furtive.hasher import HashDirectory
 
+
 class Manifest(object):
 
     def __init__(self, directory, manifest_file):

@@ -23,7 +23,8 @@ def hash_task(file_path, hash_algorithm='md5'):
 
         :param hash_algorithm: the hashing algorithm to use. All options
                                available in `hashlib.algorithms` should work.
-                               See https://docs.python.org/2/library/hashlib.html
+                               See:
+                               https://docs.python.org/2/library/hashlib.html
         :type hash_algorithm: str
 
         :return: hash of file
@@ -74,8 +75,8 @@ class HashDirectory(object):
         files_to_hash = []
         num_processes = multiprocessing.cpu_count()
 
-        logging.info('Discovering files in %s and adding to processing queue' %\
-            self.directory)
+        logging.info('Discovering files in %s and adding to processing queue'
+                     % self.directory)
         for root, dirs, files in os.walk(self.directory):
             for found_file in files:
                 full_path = os.path.join(root, found_file)
@@ -83,7 +84,8 @@ class HashDirectory(object):
                 logging.debug('Found %s' % relative_path)
                 files_to_hash.append(relative_path)
 
-        logging.debug('Switching current working directory to %s' % self.directory)
+        logging.debug('Switching current working directory to %s' %
+                      self.directory)
         old_cwd = os.getcwd()
         os.chdir(self.directory)
         logging.debug('Starting %s hash worker processes' % num_processes)
