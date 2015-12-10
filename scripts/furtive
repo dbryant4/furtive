@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import os
 import sys
 import yaml
 import logging
@@ -19,11 +20,12 @@ def parse_args(args):
     	                 help='''Directory containing files that will be
     	                         checked. Default: .''')
     parser.add_argument('--manifest', action='store', dest='manifest_path',
-    	                default='.manifest.db',
+    	                default=None,
                         help='''Location of the manifest file. Manifests may
                                 be located outside the directory indicated by
                                 --basedir. Must provide path and filename of
-                                the manifest file. Default: .manifest.yaml''')
+                                the manifest file.
+                                Default: <basedir>/.manifest.yaml''')
     parser.add_argument('--log-level', action='store', dest='log_level',
                         choices=('debug', 'info', 'warn', 'error', 'critical'),
                         default='info')
@@ -32,6 +34,11 @@ def parse_args(args):
                         nargs=1)
     parsed_args = parser.parse_args(args)
     parsed_args.action = parsed_args.action.pop()
+
+    if parsed_args.manifest_path is None:
+        parsed_args.manifest_path = os.path.join(parsed_args.basedir,
+                                                 '.manifest.yaml')
+
     return parsed_args
 
 def main():
