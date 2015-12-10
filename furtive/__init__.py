@@ -6,7 +6,7 @@
 import os
 import logging
 
-from .hasher import *
+from .hasher import HashDirectory
 from .manifest import Manifest
 
 
@@ -66,7 +66,7 @@ class Furtive(object):
         common_files = list(set(self.manifest.manifest) &
                             set(current_manifest.manifest))
         changed_files = filter((lambda x: current_manifest.manifest[x] !=
-                               self.manifest[x]), common_files)
+                                self.manifest[x]), common_files)
 
         return {'removed': removed_files,
                 'added': added_files,

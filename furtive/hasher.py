@@ -4,7 +4,6 @@
 """ Manages the hashing of files """
 
 import os
-import time
 import hashlib
 import logging
 import multiprocessing
@@ -32,15 +31,15 @@ def hash_task(file_path, hash_algorithm='md5'):
     """
 
     with open(file_path, 'r') as file_to_hash:
-        logging.debug('Starting Hash of %s' % file_path)
-        hash_object = hashlib.new('md5')
+        logging.debug('Starting Hash of %s', file_path)
+        hash_object = hashlib.new(hash_algorithm)
         while True:
             chunk = file_to_hash.read(hash_object.block_size)
             if not chunk:
                 break
             hash_object.update(chunk)
         file_hash = hash_object.hexdigest()
-        logging.debug('Hash for %s: %s' % (file_path, file_hash))
+        logging.debug('Hash for %s: %s', file_path, file_hash)
     return {file_path: file_hash}
 
 
@@ -75,22 +74,22 @@ class HashDirectory(object):
         files_to_hash = []
         num_processes = multiprocessing.cpu_count()
 
-        logging.info('Discovering files in %s and adding to processing queue'
-                     % self.directory)
-        for root, dirs, files in os.walk(self.directory):
+        logging.info('Discovering files in %s and adding to processing queue',
+                     self.directory)
+        for root, _, files in os.walk(self.directory):
             for found_file in files:
                 full_path = os.path.join(root, found_file)
                 relative_path = os.path.relpath(full_path, self.directory)
-                logging.debug('Found %s' % relative_path)
+                logging.debug('Found %s', relative_path)
                 files_to_hash.append(relative_path)
 
-        logging.debug('Switching current working directory to %s' %
+        logging.debug('Switching current working directory to %s',
                       self.directory)
         old_cwd = os.getcwd()
         os.chdir(self.directory)
-        logging.debug('Starting %s hash worker processes' % num_processes)
+        logging.debug('Starting %s hash worker processes', num_processes)
         pool = multiprocessing.Pool(processes=num_processes)
-        logging.info('Hashing %s files' % len(files_to_hash))
+        logging.info('Hashing %s files', len(files_to_hash))
         results = pool.map(hash_task, files_to_hash)
         os.chdir(old_cwd)
 
