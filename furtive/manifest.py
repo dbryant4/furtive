@@ -34,14 +34,6 @@ class Manifest(object):
         """
 
         logging.debug('Opening %s' % self.manifest_file)
-        # with sqlite3.connect(self.manifest_file) as connection:
-        #     cursor = connection.cursor()
-        #     cursor.execute('SELECT * FROM filehashes');
-        #     manifest = cursor.fetchall()
-        #
-        # self.manifest = {}
-        # for x in manifest:
-        #     self.manifest[x[0]] = x[1]
         with open(self.manifest_file, 'r') as manifest_file:
             self.manifest = yaml.load(manifest_file.read())
 
@@ -53,18 +45,6 @@ class Manifest(object):
 
         logging.info('Saving manifest to %s' % self.manifest_file)
         logging.debug('Opening %s' % self.manifest_file)
-        # with sqlite3.connect(self.manifest_file) as connection:
-        #     cursor = connection.cursor()
-        #     connection.text_factory = str
-        #     cursor.execute('CREATE TABLE IF NOT EXISTS filehashes\
-        #                     (filename TEXT, hash TEXT)')
-        #     cursor.execute('DELETE FROM filehashes')
-        #     for file_name, md5_hash in self.manifest.iteritems():
-        #         logging.debug('Saving hash for %s' % file_name)
-        #         cursor.execute('INSERT INTO filehashes VALUES (?,?)',
-        #                        (file_name.decode('utf-8'), md5_hash));
-        #     connection.commit()
-        #     cursor = None
         with open(self.manifest_file, 'w') as manifest_file:
             manifest_file.write(yaml.safe_dump(self.manifest,
                                 default_flow_style=False))
