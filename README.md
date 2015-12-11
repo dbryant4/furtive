@@ -20,7 +20,7 @@ Contents
 
 To install furtive, run `python setup.py install`.
 
-## Usage
+## CLI Usage
 
 Suppose you have a million digital photos in a directory called `my-photos` that you have taken over the years.
 
@@ -30,6 +30,11 @@ This command creates the file `.manifest.yaml` in the `my-photos/` directory. Th
 
 At this point, you can be sure that you will know if a file has changed. To check the files on the file system to the manifest, run `furtive --basedir my-photos compare`. The application will output a list of files which have been added, removed, or changed. This output is YAML format so it should be easy to parse.
 
+## Tests
+
+This application comes with tests. To run them, ensure you have `tox` installed (`pip install tox`). Then you can run `tox` to run the tests.
+
+To build the docs, run `tox -e docs`
 
 ## Licensing
 
