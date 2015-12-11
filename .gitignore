@@ -38,8 +38,6 @@ pip-log.txt
 
 venv
 .coverage
-docs/_build
-docs/_static
-docs/_templates
+docs/html
 .DS_Store
 test-results
