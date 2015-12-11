@@ -9,6 +9,7 @@ The documentation is available on Read The Docs at [furtive.readthedocs.org](htt
 
 Contents
 --------
+* [Home](index.md)
 * [API Reference](api_ref.md)
 
 ## Requirements
