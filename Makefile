@@ -12,9 +12,7 @@ tests: test
 doc: docs
 
 docs:
-	$(virtualenv_path)/bin/pip install -r docs/requirements.txt
-	mkdir -p docs/_static
-	$(virtualenv_path)/bin/sphinx-build -b html docs/. ./docs/_build
+	tox -e docs
 
 test:
 	mkdir -p test-results
