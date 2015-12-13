@@ -2,8 +2,13 @@
 # -*- coding: utf-8 -*-
 """ Manifest of files and their hashes """
 
-import yaml
 import logging
+
+from yaml import load, dump
+try:
+    from yaml import CLoader as Loader, CDumper as Dumper
+except ImportError:
+    from yaml import SafeLoader as Loader, SafeDumper as Dumper
 
 from furtive.hasher import HashDirectory
 
@@ -46,7 +51,7 @@ class Manifest(object):
 
         logging.debug('Opening %s', self.manifest_file)
         with open(self.manifest_file, 'r') as manifest_file:
-            self.manifest = yaml.load(manifest_file.read())
+            self.manifest = load(manifest_file.read(), Loader=Loader)
 
     def save(self):
         """ Save the manifest to the manifest file.
@@ -57,8 +62,9 @@ class Manifest(object):
         logging.info('Saving manifest to %s', self.manifest_file)
         logging.debug('Opening %s', self.manifest_file)
         with open(self.manifest_file, 'w') as manifest_file:
-            manifest_file.write(yaml.safe_dump(self.manifest,
-                                               default_flow_style=False))
+            manifest_file.write(dump(self.manifest,
+                                     default_flow_style=False,
+                                     Dumper=Dumper))
 
         logging.debug('Manifest saved')
 
