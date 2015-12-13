@@ -2,8 +2,10 @@ language: python
 sudo: false
 python:
   - "2.7"
-
+before_install:
+  - pip install codecov
 # command to install dependencies
 install: "pip install tox"
-# command to run tests
 script: make test
+after_success:
+  - codecov
