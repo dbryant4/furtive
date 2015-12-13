@@ -2,6 +2,8 @@ Furtive
 =======
 
 [![Build Status](https://travis-ci.org/dbryant4/furtive.svg?branch=master)](https://travis-ci.org/dbryant4/furtive)
+[![Code Climate](https://codeclimate.com/github/dbryant4/furtive/badges/gpa.svg)](https://codeclimate.com/github/dbryant4/furtive)
+[![Issue Count](https://codeclimate.com/github/dbryant4/furtive/badges/issue_count.svg)](https://codeclimate.com/github/dbryant4/furtive)
 
 File Integrity Verification (furtive) aims to ensure long term data integrity verification for digital archival purposes. The idea is to create a manifest, or hash list, of all the files of which you wish to confirm integrity. Once a manifest has been created, a user can then confirm the integrity of files at any point in the future.
 
