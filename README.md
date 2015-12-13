@@ -39,7 +39,7 @@ To build the docs, run `tox -e docs`
 
 ## Faster YAML
 
-By default, furtive will install and use the full Python implementation of the YAML parser which is very slow. In a testing environment, the Python implementation of the YAML loader took 1 minute to parse a 187,000 line furtive manifest file. My contrast, when the [LibYaml](http://pyyaml.org/wiki/LibYAML) parser was used, the loader took only 5 seconds to parse the same file.
+By default, furtive will install and use the full Python implementation of the YAML parser which is very slow. In a testing environment, the Python implementation of the YAML loader took 1 minute to parse a 187,000 line furtive manifest file. By contrast, when the [LibYaml](http://pyyaml.org/wiki/LibYAML) parser was used, the loader took only 5 seconds to parse the same file.
 
 To install the faster parser, perform the following steps:
 
