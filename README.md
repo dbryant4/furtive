@@ -48,7 +48,3 @@ To install the faster parser, perform the following steps:
 
 1. Follow the [instructions from the LibYaml website](http://pyyaml.org/wiki/LibYAML) to download and install the latest release of libyaml.
 2. Reinstall the PyYAML package by downloading the latest tar from the [PyYAML website](http://pyyaml.org/wiki/PyYAMLDocumentation) and running `python setup.py --with-libyaml install`
-
-## Licensing
-
-LGPL
