@@ -1,14 +1,27 @@
 #!/usr/bin/env python
+""" furtive command line tool """
+
 
 import os
 import sys
-import yaml
 import logging
 import argparse
 
+import yaml
+
 from furtive import Furtive
 
+
 def parse_args(args):
+    """ Method to parse command line arguments.
+
+        :param args: command line arguments as typed on the commadn line
+        :type args: str
+
+        :return: parsed arguments from argparse()
+        :rtype: argparse.Namespace()
+    """
+
     action_help = ''' Which action to perform:
       check - check the integrity of files listed in the manifest.
       create - create a new manifest from the files inthe directory
@@ -17,10 +30,10 @@ def parse_args(args):
 
     parser = argparse.ArgumentParser(description='Hash files within a directory.')
     parser.add_argument('--basedir', action='store', default='.',
-    	                 help='''Directory containing files that will be
-    	                         checked. Default: .''')
+                        help='''Directory containing files that will be
+                             checked. Default: .''')
     parser.add_argument('--manifest', action='store', dest='manifest_path',
-    	                default=None,
+                        default=None,
                         help='''Location of the manifest file. Manifests may
                                 be located outside the directory indicated by
                                 --basedir. Must provide path and filename of
@@ -42,6 +55,8 @@ def parse_args(args):
     return parsed_args
 
 def main():
+    """ Starting point of the furtive command line tool """
+
     args = parse_args(sys.argv[1:])
 
     log_format = '%(asctime)s [%(levelname)s]: %(message)s'

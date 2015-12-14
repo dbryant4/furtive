@@ -6,6 +6,7 @@ before_install:
   - pip install codecov
 # command to install dependencies
 install: "pip install tox"
-script: make test
+script:
+  - tox
 after_success:
   - codecov
