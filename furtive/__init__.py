@@ -65,8 +65,9 @@ class Furtive(object):
                              set(current_manifest.manifest))
         common_files = list(set(self.manifest.manifest) &
                             set(current_manifest.manifest))
-        changed_files = filter((lambda x: current_manifest.manifest[x] !=
-                                self.manifest[x]), common_files)
+        changed_files = [common_file for common_file in common_files
+                         if current_manifest[common_file] !=
+                         self.manifest[common_file]]
 
         return {'removed': removed_files,
                 'added': added_files,
