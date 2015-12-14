@@ -6,8 +6,8 @@
 import os
 import logging
 
-from .hasher import HashDirectory
-from .manifest import Manifest
+from furtive.hasher import HashDirectory
+from furtive.manifest import Manifest
 
 
 class Furtive(object):
