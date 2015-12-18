@@ -1,22 +1,20 @@
 language: python
 sudo: false
 python:
-  - "2.7"
+- '2.7'
 before_install:
-  - pip install codecov
-
+- pip install codecov
 install: pip install tox
-
 script:
-  - tox
-
+- tox
 after_success:
-  - codecov
-
+- codecov
 deploy:
   provider: pypi
   server: https://testpypi.python.org/pypi/
-  user: "$PYPI_USER"
-  password: "$PYPI_PASSWORD"
+  user:
+    secure: npR/9hGBwp/2wNZyLXapbV8HeVQGt/QeNmlaaik4LIwq3xGIF2EXH9OYfgAM2/VtZ5MkBoAzpqS1h4YDRfoLUlL7rdqTZ8B8/FQp5OLPh0VeEj0p7L5oUAhh6I42/mk4X5y8v869ZENzr9oer0uC72VJSEEi+/gHFUd96eIoHek=
+  password:
+    secure: mdfdgLTO71eUG5rK1FQTGIysaBotl+Nx8gZn0Jg4qxSfM4B2kt34COHSwqmdvp2+2b3HZQBFQ3prKkaxS+ffS4NfDirZwuhwCzr/KUmhpML64aqPHnntWFUA86CG4WBp7xd9fEmllOSNLbVEsngEBUeK8BbAzucrzhlOSbNIWVo=
   on:
     tags: true
