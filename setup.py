@@ -2,7 +2,7 @@
 
 from distutils.core import setup
 
-__VERSION__ = '0.2.2'
+__VERSION__ = '0.2.3'
 
 long_description = "See https://furtive.readthedocs.org"
 
