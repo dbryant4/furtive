@@ -4,9 +4,19 @@ python:
   - "2.7"
 before_install:
   - pip install codecov
-# command to install dependencies
-install: "pip install tox"
+
+install: pip install tox
+
 script:
   - tox
+
 after_success:
   - codecov
+
+deploy:
+  provider: pypi
+  server: https://testpypi.python.org/pypi/
+  user: "$PYPI_USER"
+  password: "$PYPI_PASSWORD"
+  on:
+    tags: true
