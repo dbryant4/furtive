@@ -2,8 +2,7 @@
 
 from distutils.core import setup
 
-with open('README.md') as file:
-    long_description = file.read()
+long_description = "See https://furtive.readthedocs.org"
 
 setup(name='Furtive',
       version='0.2',
