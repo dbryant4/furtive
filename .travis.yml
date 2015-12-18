@@ -11,10 +11,9 @@ after_success:
 - codecov
 deploy:
   provider: pypi
-  server: https://testpypi.python.org/pypi/
-  user:
-    secure: npR/9hGBwp/2wNZyLXapbV8HeVQGt/QeNmlaaik4LIwq3xGIF2EXH9OYfgAM2/VtZ5MkBoAzpqS1h4YDRfoLUlL7rdqTZ8B8/FQp5OLPh0VeEj0p7L5oUAhh6I42/mk4X5y8v869ZENzr9oer0uC72VJSEEi+/gHFUd96eIoHek=
+  user: dbryant4@gmail.com
   password:
-    secure: mdfdgLTO71eUG5rK1FQTGIysaBotl+Nx8gZn0Jg4qxSfM4B2kt34COHSwqmdvp2+2b3HZQBFQ3prKkaxS+ffS4NfDirZwuhwCzr/KUmhpML64aqPHnntWFUA86CG4WBp7xd9fEmllOSNLbVEsngEBUeK8BbAzucrzhlOSbNIWVo=
+    secure: bOcu5tnHlag84/sV6lchV24XCOVh+i7tk73aLtEChpL0U99MbJSrEpvG+VnOBPEsusePZEgaPC0rcdsXKRb8GiTCidNvthBE9wSc9jDZyf1sDVx3VVd4vwpms99EEo9q79FL2llImG8mDghg9bTpDndgoJvynv3Lwl7Eo7BofsM=
   on:
     tags: true
+    repo: dbryant4/furtive
