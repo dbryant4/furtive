@@ -12,6 +12,7 @@ setup(name='Furtive',
       long_description=long_description,
       packages=['furtive'],
       scripts=['scripts/furtive'],
+      home_page='https://furtive.readthedocs.org',
       install_requires=[
         'PyYAML==3.11',
         'argparse==1.4.0'
