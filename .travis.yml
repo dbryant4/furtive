@@ -4,6 +4,7 @@ python:
 - '2.7'
 before_install:
 - pip install codecov
+- pip install -U pip
 install: pip install tox
 script:
 - tox
@@ -12,10 +13,10 @@ after_success:
 deploy:
   provider: pypi
   user: dbryant4
-  server: https://testpypi.python.org/pypi
+  server: https://pypi.python.org/pypi
   distributions: sdist
   password:
-    secure: bOcu5tnHlag84/sV6lchV24XCOVh+i7tk73aLtEChpL0U99MbJSrEpvG+VnOBPEsusePZEgaPC0rcdsXKRb8GiTCidNvthBE9wSc9jDZyf1sDVx3VVd4vwpms99EEo9q79FL2llImG8mDghg9bTpDndgoJvynv3Lwl7Eo7BofsM=
+    secure: nBHIoaeIo0HtmC3Yf3hAKusK9ROxAORHJvgTgy+8IruafMoXM+i3JwtZol3DBmU/e14Rx9tbHZNvugYZVn8hyFneYXL8oiFY3wRmniHTtsRCBKEfhM/ggeM5tyLs5CE8LRlV/cKtGq2Lv556c2+oKS0Kk+5zgz8amjXnRXqw92I=
   on:
     tags: true
     repo: dbryant4/furtive
