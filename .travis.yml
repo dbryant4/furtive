@@ -16,7 +16,7 @@ deploy:
   server: https://pypi.python.org/pypi
   distributions: sdist
   password:
-    secure: nBHIoaeIo0HtmC3Yf3hAKusK9ROxAORHJvgTgy+8IruafMoXM+i3JwtZol3DBmU/e14Rx9tbHZNvugYZVn8hyFneYXL8oiFY3wRmniHTtsRCBKEfhM/ggeM5tyLs5CE8LRlV/cKtGq2Lv556c2+oKS0Kk+5zgz8amjXnRXqw92I=
+    secure: mF8+G8bquQqmWdXBn45RotzAVfK/lqp2pL6OBSdHDp/jVhHCpr7Wa6DAu4fAB1M41S/Wzc3U3IagJ93hEQ3cQYrAMWfPm1RVVP4F4AH+zxSGsGVZoF7LI+bUK2Mf4/bfn7acVrLy94efVgWg11QWqVzIw1ISPz0z0txngpPfsbk=
   on:
     tags: true
     repo: dbryant4/furtive
