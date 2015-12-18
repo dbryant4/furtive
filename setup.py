@@ -2,10 +2,12 @@
 
 from distutils.core import setup
 
+__VERSION__ = '0.0.1'
+
 long_description = "See https://furtive.readthedocs.org"
 
 setup(name='Furtive',
-      version='0.2',
+      version=__VERSION__,
       description='File Integrity Verification System',
       author='Derrick Bryant',
       author_email='dbryant4@gmail.com',
