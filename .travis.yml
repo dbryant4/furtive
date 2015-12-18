@@ -13,7 +13,7 @@ deploy:
   provider: pypi
   user: dbryant4
   server: https://testpypi.python.org/pypi
-  distributions: "sdist bdist_wheel"
+  distributions: sdist
   password:
     secure: bOcu5tnHlag84/sV6lchV24XCOVh+i7tk73aLtEChpL0U99MbJSrEpvG+VnOBPEsusePZEgaPC0rcdsXKRb8GiTCidNvthBE9wSc9jDZyf1sDVx3VVd4vwpms99EEo9q79FL2llImG8mDghg9bTpDndgoJvynv3Lwl7Eo7BofsM=
   on:

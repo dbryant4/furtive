@@ -2,17 +2,19 @@
 
 from distutils.core import setup
 
+__VERSION__ = '0.0.1'
+
 long_description = "See https://furtive.readthedocs.org"
 
 setup(name='Furtive',
-      version='0.2',
+      version=__VERSION__,
       description='File Integrity Verification System',
       author='Derrick Bryant',
       author_email='dbryant4@gmail.com',
       long_description=long_description,
       packages=['furtive'],
       scripts=['scripts/furtive'],
-      home_page='https://furtive.readthedocs.org',
+      url='https://furtive.readthedocs.org',
       install_requires=[
         'PyYAML==3.11',
         'argparse==1.4.0'
