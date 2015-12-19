@@ -14,7 +14,7 @@ deploy:
   provider: pypi
   user: dbryant4
   password:
-    secure: lPxj7XGdR8nvSQrDiJJvIq0sz1NajbJdjU/XwqTXD9JLYvQ+JJkaJqoWiakLqXNDP+3yqKMMoKg9PPuNbfS0bevjqmoYTy2rrWIRhFQSSI5XQc2AG1j61scL+GDqg9nKJAWYbdAyklb+ZZv1knHKI8kLfQmLVAhZm27LQj1NuNY=
+    secure: MUmIiUotjPFgiiqXgUMBE0pWVcp11TOh5sa9eK9iIcCt9kbl2OKeeJSL4esGEPqxj5Wdgr3nqnvUAMyElj5/FPQuaxzNZ4LxPGoJBC06SiFUIEngrRE7oP51Loq2RMtTLg5v2XDC4BIen8oxvhxRe2OqJwLtLDsciGD6GOSzcdc=
   on:
     tags: true
     repo: dbryant4/furtive
