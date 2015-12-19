@@ -53,7 +53,8 @@ class Furtive(object):
         """
 
         if self.manifest.is_empty():
-            raise RuntimeError('Manifest {0!s} not loaded.'.format(self.manifest_path))
+            raise RuntimeError('Manifest {0!s} not loaded.'
+                               .format(self.manifest_path))
 
         logging.info('Generating temporary updated manifest.')
         current_manifest = Manifest(self.base_dir, '/dev/null')
