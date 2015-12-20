@@ -32,7 +32,9 @@ class TestHashDirectory(unittest.TestCase):
 
             hash_directory = HashDirectory('tests/fixtures/test-data')
             results = hash_directory.hash_files()
+
             pool.terminate.assert_called_once_with()
+            self.assertEqual(results, {})
 
     def test_hash_task(self):
         """ Ensure furtive.hasher.hash_task works as expected """
