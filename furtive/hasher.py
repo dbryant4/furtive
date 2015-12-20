@@ -4,7 +4,6 @@
 """ Manages the hashing of files """
 
 import os
-import sys
 import hashlib
 import logging
 import multiprocessing
