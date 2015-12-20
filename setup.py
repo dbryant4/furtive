@@ -4,7 +4,9 @@ from distutils.core import setup
 
 __VERSION__ = '0.2.4'
 
-long_description = "See https://furtive.readthedocs.org"
+long_description = """
+Github: https://github.com/dbryant4/furtive
+"""
 
 setup(name='Furtive',
       version=__VERSION__,
@@ -16,6 +18,7 @@ setup(name='Furtive',
       packages=['furtive'],
       scripts=['scripts/furtive'],
       url='https://furtive.readthedocs.org',
+      download_url='https://github.com/dbryant4/furtive',
       install_requires=[
         'PyYAML==3.11',
         'argparse==1.4.0'
