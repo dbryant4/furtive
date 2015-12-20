@@ -4,7 +4,7 @@ import logging
 import unittest
 import multiprocessing
 
-from mock import MagicMock
+from mock import MagicMock, patch
 
 from furtive.hasher import HashDirectory, hash_task, initializer
 
@@ -22,6 +22,17 @@ class TestHashDirectory(unittest.TestCase):
         self.assertEqual(results['documents/exclude_me.txt'], '2e7d8cb32bb82e838506aff5600182d1')
         self.assertEqual(len(results), 4)
 
+    def test_hash_directory_keyboard_interupt(self):
+        """ Ensure HashDirectory gracefully handles a KeyboardInterrupt """
+
+        with patch('furtive.hasher.multiprocessing.Pool') as mock_pool:
+            pool = MagicMock()
+            pool.map.side_effect = KeyboardInterrupt
+            mock_pool.return_value = pool
+
+            hash_directory = HashDirectory('tests/fixtures/test-data')
+            results = hash_directory.hash_files()
+            pool.terminate.assert_called_once_with()
 
     def test_hash_task(self):
         """ Ensure furtive.hasher.hash_task works as expected """
