@@ -52,12 +52,19 @@ def hash_task(file_path, hash_algorithm='md5'):
 
     return {file_path: file_hash}
 
+
 def initializer(terminating_):
-    # This places terminating in the global namespace of the worker subprocesses.
+    """ Method to make terminating a global variable so that it is inherited
+        by child processes.
+    """
+
+    # This places terminating in the global namespace of the worker
+    # subprocesses.
     # This allows the worker function to access `terminating` even though it is
     # not passed as an argument to the function.
     global terminating
     terminating = terminating_
+
 
 class HashDirectory(object):
     """ Object to manage hashing files in a directory.
@@ -104,7 +111,9 @@ class HashDirectory(object):
         os.chdir(self.directory)
         logging.debug('Starting %s hash worker processes', num_processes)
         terminating = multiprocessing.Event()
-        pool = multiprocessing.Pool(initializer=initializer, initargs=(terminating, ), processes=num_processes)
+        pool = multiprocessing.Pool(initializer=initializer,
+                                    initargs=(terminating, ),
+                                    processes=num_processes)
 
         logging.info('Hashing %s files', len(files_to_hash))
         try:
