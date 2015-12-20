@@ -46,7 +46,7 @@ def hash_task(file_path, hash_algorithm='md5'):
             return None
 
     except KeyboardInterrupt:
-        logging.debug('Stopping hash of %s' % file_path)
+        logging.debug('Stopping hash of %s', file_path)
         terminating.set()
         return None
 
