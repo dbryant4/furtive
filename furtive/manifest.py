@@ -6,7 +6,7 @@ import logging
 
 from yaml import load, dump
 try:
-    from yaml import CLoader as Loader, CDumper as Dumper
+    from yaml import CSafeLoader as Loader, CSafeDumper as Dumper
 except ImportError:
     from yaml import SafeLoader as Loader, SafeDumper as Dumper
 
