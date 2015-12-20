@@ -9,7 +9,7 @@ import argparse
 
 import yaml
 
-from furtive import Furtive
+from furtive import Furtive, __version__
 
 
 def parse_args(args):
@@ -45,6 +45,9 @@ def parse_args(args):
     parser.add_argument('action', choices=('create', 'compare'),
                         help=action_help,
                         nargs=1)
+    parser.add_argument('--version', action='version',
+                        version='%(prog)s {version}'
+                        .format(version=__version__))
     parsed_args = parser.parse_args(args)
     parsed_args.action = parsed_args.action.pop()
 
