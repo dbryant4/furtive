@@ -36,6 +36,13 @@ class TestHashDirectory(unittest.TestCase):
             pool.terminate.assert_called_once_with()
             self.assertEqual(results, {})
 
+    def test_hash_directory_errors_when_given_file(self):
+        """ Ensure HashDirectory raises an error when a file is provided instead of a directory """
+
+        with self.assertRaises(OSError):
+            hash_directory = HashDirectory('tests/fixtures/test-data/documents/exclude_me.txt')
+            hash_directory.hash_files()
+
     def test_hash_task(self):
         """ Ensure furtive.hasher.hash_task works as expected """
 
