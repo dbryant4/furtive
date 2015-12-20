@@ -31,7 +31,7 @@ class TestManifest(unittest.TestCase):
             self.assertTrue('pictures/Picture #1.jpg' in manifest_file.read())
 
     def test_manifest_load(self):
-        """ Ensure the manifest can be loaded from a sqlite3 database """
+        """ Ensure the manifest can be loaded from a yaml file """
 
         self.test_manifest_save()
 

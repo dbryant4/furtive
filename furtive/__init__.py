@@ -15,6 +15,10 @@ class Furtive(object):
         verify the state in the future. Example use cases include file archives
         and file transport.
 
+        If the manifest file exists, it will be automatcally loaded. Calling
+        create() will overwrite the existing manifest in memory as well as the
+        file.
+
         :param base_dir: Base directory to use for the manifest. Can be a full
                          or relative path.
         :type base_dir: str
@@ -59,6 +63,8 @@ class Furtive(object):
         logging.info('Generating temporary updated manifest.')
         current_manifest = Manifest(self.base_dir, '/dev/null')
         current_manifest.create()
+
+        logging.info('Generating list of changed files')
 
         added_files = list(set(current_manifest.manifest) -
                            set(self.manifest.manifest))

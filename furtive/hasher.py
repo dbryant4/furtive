@@ -30,17 +30,40 @@ def hash_task(file_path, hash_algorithm='md5'):
         :return type: dict
     """
 
-    with open(file_path, 'r') as file_to_hash:
-        logging.debug('Starting Hash of %s', file_path)
-        hash_object = hashlib.new(hash_algorithm)
-        while True:
-            chunk = file_to_hash.read(hash_object.block_size)
-            if not chunk:
-                break
-            hash_object.update(chunk)
-        file_hash = hash_object.hexdigest()
-        logging.debug('Hash for %s: %s', file_path, file_hash)
+    try:
+        if not terminating.is_set():
+            with open(file_path, 'r') as file_to_hash:
+                logging.debug('Starting Hash of %s', file_path)
+                hash_object = hashlib.new(hash_algorithm)
+                while True:
+                    chunk = file_to_hash.read(hash_object.block_size)
+                    if not chunk:
+                        break
+                    hash_object.update(chunk)
+                file_hash = hash_object.hexdigest()
+                logging.debug('Hash for %s: %s', file_path, file_hash)
+        else:
+            return None
+
+    except KeyboardInterrupt:
+        logging.debug('Stopping hash of %s', file_path)
+        terminating.set()
+        return None
+
     return {file_path: file_hash}
+
+
+def initializer(terminating_):
+    """ Method to make terminating a global variable so that it is inherited
+        by child processes.
+    """
+
+    # This places terminating in the global namespace of the worker
+    # subprocesses.
+    # This allows the worker function to access `terminating` even though it is
+    # not passed as an argument to the function.
+    global terminating
+    terminating = terminating_
 
 
 class HashDirectory(object):
@@ -66,8 +89,6 @@ class HashDirectory(object):
     def hash_files(self):
         """ Orchestrates the discovery and hashing of files.
 
-
-
             Note: This method only supports the md5 hashing algorithm
         """
 
@@ -83,22 +104,31 @@ class HashDirectory(object):
                 logging.debug('Found %s', relative_path)
                 files_to_hash.append(relative_path)
 
+        self.hashes = {}
         logging.debug('Switching current working directory to %s',
                       self.directory)
         old_cwd = os.getcwd()
         os.chdir(self.directory)
         logging.debug('Starting %s hash worker processes', num_processes)
-        pool = multiprocessing.Pool(processes=num_processes)
-        logging.info('Hashing %s files', len(files_to_hash))
-        results = pool.map(hash_task, files_to_hash, num_processes*2)
-        os.chdir(old_cwd)
+        terminating = multiprocessing.Event()
+        pool = multiprocessing.Pool(initializer=initializer,
+                                    initargs=(terminating, ),
+                                    processes=num_processes)
 
-        self.hashes = {}
+        logging.info('Hashing %s files', len(files_to_hash))
+        try:
+            results = []
+            results = pool.map(hash_task, files_to_hash, num_processes*2)
+            pool.close()
+        except KeyboardInterrupt:
+            pool.terminate()
+        finally:
+            logging.debug('Waiting for processes to stop')
+            pool.join()
+            logging.debug('Processes stopped')
+
+        os.chdir(old_cwd)
         for item in results:
             self.hashes[item.keys()[0]] = item.values()[0]
-
-        logging.debug('Ensuring processes have stopped')
-        pool.close()
-        pool.join()
 
         return self.hashes
