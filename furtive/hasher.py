@@ -72,7 +72,7 @@ class HashDirectory(object):
         """
 
         files_to_hash = []
-        num_processes = multiprocessing.cpu_count()
+        num_processes = multiprocessing.cpu_count() * 2
 
         logging.info('Discovering files in %s and adding to processing queue',
                      self.directory)
@@ -90,7 +90,7 @@ class HashDirectory(object):
         logging.debug('Starting %s hash worker processes', num_processes)
         pool = multiprocessing.Pool(processes=num_processes)
         logging.info('Hashing %s files', len(files_to_hash))
-        results = pool.map(hash_task, files_to_hash)
+        results = pool.map(hash_task, files_to_hash, num_processes*2)
         os.chdir(old_cwd)
 
         self.hashes = {}
