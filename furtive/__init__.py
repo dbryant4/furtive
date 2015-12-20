@@ -9,6 +9,8 @@ import logging
 from furtive.hasher import HashDirectory
 from furtive.manifest import Manifest
 
+__version__ = '0.2.4'
+
 
 class Furtive(object):
     """ Furtive is an application which stores file state and allows users to
