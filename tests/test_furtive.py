@@ -65,6 +65,14 @@ class TestFurtive(unittest.TestCase):
         self.assertEqual(changes['removed'], [])
         self.assertEqual(changes['changed'], ['test-file'])
 
+    def test_raise_error_on_empty_manifest(self):
+        """ Ensure an error is raised when acting upon an empty manifest """
+
+        self.furtive = Furtive('tests/fixtures/test-data', 'non-existing-manifest')
+        with self.assertRaises(RuntimeError):
+            changes = self.furtive.compare()
+            self.assertTrue(changes is None)
+
     def tearDown(self):
         if os.path.exists('.test_manifest.yaml'):
             os.unlink('.test_manifest.yaml')
