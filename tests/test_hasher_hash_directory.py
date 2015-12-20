@@ -2,14 +2,15 @@
 
 import logging
 import unittest
+import multiprocessing
 
-from furtive.hasher import HashDirectory, hash_task
+from mock import MagicMock
+
+from furtive.hasher import HashDirectory, hash_task, initializer
 
 class TestHashDirectory(unittest.TestCase):
     def test_hash_directory(self):
         """ Ensure HashDirectory will correctly hash all files in a directory """
-
-        logging.basicConfig(level=logging.DEBUG)
 
         hash_directory = HashDirectory('tests/fixtures/test-data')
 
@@ -25,8 +26,34 @@ class TestHashDirectory(unittest.TestCase):
     def test_hash_task(self):
         """ Ensure furtive.hasher.hash_task works as expected """
 
+        terminating = MagicMock()
+        terminating.is_set.return_value = False
+        initializer(terminating)
+
         result = hash_task('tests/fixtures/test-data/documents/Important Document 1.odt')
         self.assertEqual(result['tests/fixtures/test-data/documents/Important Document 1.odt'], 'd460a36805fb460c038d96723f206b20', msg=result)
+
+    def test_hash_task_terminates(self):
+        """ Ensure furtive.hasher.hash_task terminates when terminating is set """
+
+        terminating = MagicMock()
+        terminating.is_set.return_value = True
+        initializer(terminating)
+
+        result = hash_task('tests/fixtures/test-data/documents/Important Document 1.odt')
+        self.assertEqual(result, None, msg=result)
+
+    def test_hash_task_keyboard_interupt(self):
+        """ Ensure furtive.hasher.hash_task sets terminating to true during KeyboardInterrupt """
+
+        terminating = MagicMock(spec=multiprocessing.Event())
+        terminating.is_set.side_effect = KeyboardInterrupt
+        initializer(terminating)
+
+        result = hash_task('tests/fixtures/test-data/documents/Important Document 1.odt')
+
+        self.assertEqual(result, None)
+        terminating.set.assert_called_once_with()
 
 if __name__ == '__main__':
     unittest.main()

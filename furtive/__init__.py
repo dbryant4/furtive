@@ -60,6 +60,8 @@ class Furtive(object):
         current_manifest = Manifest(self.base_dir, '/dev/null')
         current_manifest.create()
 
+        logging.info('Generating list of changed files')
+
         added_files = list(set(current_manifest.manifest) -
                            set(self.manifest.manifest))
         removed_files = list(set(self.manifest.manifest) -
