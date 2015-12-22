@@ -34,6 +34,10 @@ This command creates the file `.manifest.yaml` in the `my-photos/` directory. Th
 
 At this point, you can be sure that you will know if a file has changed. To check the files on the file system to the manifest, run `furtive --basedir my-photos compare`. The application will output a list of files which have been added, removed, or changed. This output is YAML format so it should be easy to parse.
 
+### Exclusions
+
+Exclusion patterns can be provided using the `--exclude` argument. This argument can be provided multiple times. The pattern consists of UNIX shell-style wildcard characters. See the [fnmatch documentation](https://docs.python.org/2/library/fnmatch.html) for more information. 
+
 ## Tests
 
 This application comes with tests. To run them, ensure you have `tox` installed (`pip install tox`). Then you can run `tox` to run the tests.
