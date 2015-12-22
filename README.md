@@ -13,6 +13,7 @@ The documentation is available on Read The Docs at [furtive.readthedocs.org](htt
 Contents
 --------
 * [Home](index.md)
+* [CLI Reference](cli_ref.md)
 * [API Reference](api_ref.md)
 
 ## Requirements
@@ -26,23 +27,32 @@ To install furtive, run `python setup.py install`.
 
 ## CLI Usage
 
-Suppose you have a million digital photos in a directory called `my-photos` that you have taken over the years.
+See the [CLI Reference](cli_ref.md) for more information about available command line arguments.
+
+### Use Case Example
+Suppose you have a million digital photos in a directory called `my-photos` that you have taken over the years. You would like to know if the files begin to decay due to hardware failure or something else. Alternatively, you may wish to have reassurance that your photos have not become corrupted while being stored in a cloud backup solution such as S3 or Glacier.
 
 To record the current state of the files, run `furtive --basedir my-photos create`
 
 This command creates the file `.manifest.yaml` in the `my-photos/` directory. The location and name of this file can be changed by using the `--manifest` argument.
 
-At this point, you can be sure that you will know if a file has changed. To check the files on the file system to the manifest, run `furtive --basedir my-photos compare`. The application will output a list of files which have been added, removed, or changed. This output is YAML format so it should be easy to parse.
+At this point, you can be sure that you will know if a file has changed. To check the files on the file system to the recorded state in the manifest, run `furtive --basedir my-photos check`. The application will output a list of files which have been added, removed, or changed. This output is YAML format so it should be easy to parse. Additionally, furtive will exit with 1 indicating the check failed. This command can be placed in a cron job and setup to send a notification if a file has changed.
 
-### Exclusions
+### Actions
 
-Exclusion patterns can be provided using the `--exclude` argument. This argument can be provided multiple times. The pattern consists of UNIX shell-style wildcard characters. See the [fnmatch documentation](https://docs.python.org/2/library/fnmatch.html) for more information. 
+There are a few actions which can be performed by furtive.
+
+- **create** - create a new manifest from the files in the directory specified by the `--basedir` argument.
+
+- **compare** - compare the current state of the files on the file system with the recorded state in the manifest file. A YAML based report will be created detailing which files have changed and which files have been added or removed. Status code is 0 if the comparison was successful.
+
+- **check** - check the integrity of files listed in the manifest. Same as `compare` but exits with status code 1 if there are changes to the files included in the manifest. That is, if any file hash changes or if files are added or removed, the application will exit with a status code of 1 to indicate there are changes. This action can be useful for scripting. For example, to run a nightly cron check of a manifest. A YAML based report will be generated as well.
 
 ## Tests
 
 This application comes with tests. To run them, ensure you have `tox` installed (`pip install tox`). Then you can run `tox` to run the tests.
 
-To build the docs, run `tox -e docs`
+To build the docs, run `tox -e docs`. The HTML docs will be generated in the `.tox/docs/tmp/html/` directory.
 
 ## Faster YAML
 

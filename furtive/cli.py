@@ -14,7 +14,7 @@ import yaml
 from furtive import Furtive, __version__
 
 
-def parse_args(args):
+def parse_args(args=None):
     """ Method to parse command line arguments.
 
         :param args: command line arguments as typed on the commadn line
@@ -39,7 +39,7 @@ def parse_args(args):
                 specified by the --basedir argument.
     '''
 
-    parser = argparse.ArgumentParser(description='Hash files in a directory.',
+    parser = argparse.ArgumentParser(description='Manage a Furtive manifest',
                                      formatter_class=RawTextHelpFormatter)
     parser.add_argument('--basedir', action='store', default='.',
                         help='Directory containing files that will be\n'
@@ -60,7 +60,16 @@ def parse_args(args):
                              'manifest. Can have multiple occurances of this\n'
                              'argument. Excludes are not stored in the\n'
                              'manifest so it is up to the user to provide\n'
-                             'the same arguments every run.')
+                             'the same arguments every run. Patterns are\n'
+                             'evaluated as UNIX shell-style wildcard\n'
+                             'characters. See the [fnmatch documentation]'
+                             '(https://docs.python.org/2/library/fnmatch.html)'
+                             'for more information.\n\nIt is important to\n'
+                             'note that exclusions are not stored. Therefore\n'
+                             ',they must be specified for every run of\n'
+                             '`furtive`. Otherwise, the files which were\n'
+                             'previously excluded will be included and will\n'
+                             'show up as files added to the manifest.')
     parser.add_argument('--quiet', action='store_true',
                         help='Only print out critial error messages. Do not\n'
                         'print a report at the end of a compare run. Using\n'
@@ -76,9 +85,12 @@ def parse_args(args):
     parser.add_argument('action', choices=('create', 'compare', 'check'),
                         help=action_help,
                         nargs=1)
+
+    if args is None:
+        return parser
+
     parsed_args = parser.parse_args(args)
     parsed_args.action = parsed_args.action.pop()
-
     if parsed_args.manifest_path is None:
         parsed_args.manifest_path = os.path.join(parsed_args.basedir,
                                                  '.manifest.yaml')
