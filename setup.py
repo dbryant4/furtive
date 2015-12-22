@@ -16,7 +16,11 @@ setup(name='Furtive',
       long_description=long_description,
       license='MIT',
       packages=['furtive'],
-      scripts=['scripts/furtive'],
+      entry_points={
+        'console_scripts': [
+            'furtive=furtive.cli:main',
+        ]
+      },
       url='https://furtive.readthedocs.org',
       download_url='https://github.com/dbryant4/furtive',
       install_requires=[
