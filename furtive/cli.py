@@ -17,7 +17,7 @@ from furtive import Furtive, __version__
 def parse_args(args=None):
     """ Method to parse command line arguments.
 
-        :param args: command line arguments as typed on the commadn line
+        :param args: command line arguments as typed on the command line
         :type args: str
 
         :return: parsed arguments from argparse()
@@ -120,9 +120,10 @@ def main():
         changes = furtive.compare()
         if not args.quiet:
             sys.stdout.write(yaml.safe_dump(changes, default_flow_style=False))
-        if args.action == 'check':
-            if changes['changed'] or changes['removed'] or changes['added']:
-                sys.exit(1)
+        if args.action == 'check' and (changes['changed'] or
+                                       changes['removed'] or
+                                       changes['added']):
+            sys.exit(1)
 
 if __name__ == '__main__':
     main()
