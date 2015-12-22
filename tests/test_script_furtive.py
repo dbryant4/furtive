@@ -111,6 +111,51 @@ class TestScriptFurtive(unittest.TestCase):
         stdout = mock_stdout.getvalue()
         self.assertTrue(stdout == '', msg=stdout)
 
+    def test_check(self):
+        """ Ensure exit with 1 if check action is provided. """
+
+        # Create manifest
+        args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml create'
+        sys.argv = args.split()
+        furtive.main()
+
+        # Compare without making changes. Should not raise exception.
+        args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml check'
+        sys.argv = args.split()
+        furtive.main()
+
+        # Create a file and run compare again with --detailed-exitcodes. Should exit with 1
+        with open('tests/fixtures/test-data/test-file', 'w') as text_file:
+            text_file.write('This is a test file.')
+
+        args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml check'
+        sys.argv = args.split()
+        with self.assertRaises(SystemExit) as return_status:
+            furtive.main()
+            self.assertEqual(return_status.exception.code, 1)
+
+        # Add the new file to the manifest, then change it. Should exit with 1
+        args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml create'
+        sys.argv = args.split()
+        furtive.main()
+
+        with open('tests/fixtures/test-data/test-file', 'w') as text_file:
+            text_file.write('This is a changed test file.')
+
+        args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml check'
+        sys.argv = args.split()
+        with self.assertRaises(SystemExit) as return_status:
+            furtive.main()
+            self.assertEqual(return_status.exception.code, 1)
+
+        # delete test file then run compare. Should exit with 1
+        os.unlink('tests/fixtures/test-data/test-file')
+        args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml check'
+        sys.argv = args.split()
+        with self.assertRaises(SystemExit) as return_status:
+            furtive.main()
+            self.assertEqual(return_status.exception.code, 1)
+
     def tearDown(self):
         """ Common tearDown tasks for all tests in this test case """
 
