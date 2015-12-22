@@ -7,8 +7,10 @@ from furtive import Furtive
 
 class TestFurtive(unittest.TestCase):
     """ Test case intended to test the furtive module """
-    
+
     def setUp(self):
+        """ Common setup tasks for all tests in this test case """
+
         self.furtive = Furtive('tests/fixtures/test-data', '.test_manifest.yaml')
         self.furtive.create()
 
@@ -86,6 +88,8 @@ class TestFurtive(unittest.TestCase):
             self.assertTrue(changes is None)
 
     def tearDown(self):
+        """ Common tearDown tasks for all tests in this test case """
+
         if os.path.exists('.test_manifest.yaml'):
             os.unlink('.test_manifest.yaml')
         if os.path.exists('tests/fixtures/test-data/test-file'):
