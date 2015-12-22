@@ -27,13 +27,18 @@ class Furtive(object):
         :param manifest_path: Path to the manifest file. Can be a full or
                               relative path.
         :type manifest_path: str
-
+        :param exclude: list containing patterns to use to exclude files from
+                        the manifest.
+        :type exclude: list
     """
 
-    def __init__(self, base_dir, manifest_path):
+    def __init__(self, base_dir, manifest_path, exclude=None):
         self.base_dir = base_dir
         self.manifest_path = manifest_path
-        self.manifest = Manifest(self.base_dir, self.manifest_path)
+        self.exclude = [] if exclude is None else exclude
+        self.manifest = Manifest(self.base_dir,
+                                 self.manifest_path,
+                                 self.exclude)
 
         if os.path.exists(manifest_path):
             self.manifest.load()

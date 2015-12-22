@@ -14,11 +14,22 @@ class TestFurtive(unittest.TestCase):
     def test_furtive_create(self):
         """ Ensure a manifest can be created """
 
-        self.assertEqual(self.furtive.manifest.manifest['documents/Important Document 1.odt'], 'd460a36805fb460c038d96723f206b20')
-        self.assertEqual(self.furtive.manifest.manifest['documents/Important Presentation.odp'], '1911ec839cedcbf00739a7d3447ec3a3')
-        self.assertEqual(self.furtive.manifest.manifest['pictures/Picture #1.jpg'], '6eec850e32622c0e33bdae08ced29e24')
-        self.assertEqual(self.furtive.manifest.manifest['documents/exclude_me.txt'], '2e7d8cb32bb82e838506aff5600182d1')
+        self.assertEqual(self.furtive.manifest['documents/Important Document 1.odt'], 'd460a36805fb460c038d96723f206b20')
+        self.assertEqual(self.furtive.manifest['pictures/Picture #1.jpg'], '6eec850e32622c0e33bdae08ced29e24')
+        self.assertEqual(self.furtive.manifest['documents/exclude_me.txt'], '2e7d8cb32bb82e838506aff5600182d1')
+        self.assertEqual(self.furtive.manifest['documents/Important Presentation.odp'], '1911ec839cedcbf00739a7d3447ec3a3')
         self.assertEqual(len(self.furtive.manifest.manifest), 4)
+
+    def test_furtive_create_with_exclusion(self):
+        """ Ensure a manifest can be created but excluding some files"""
+
+        self.furtive = Furtive('tests/fixtures/test-data', '.test_manifest.yaml', ['*exclude*.txt'])
+        self.furtive.create()
+        self.assertEqual(self.furtive.manifest['documents/Important Document 1.odt'], 'd460a36805fb460c038d96723f206b20')
+        self.assertEqual(self.furtive.manifest['documents/Important Presentation.odp'], '1911ec839cedcbf00739a7d3447ec3a3')
+        self.assertEqual(self.furtive.manifest['pictures/Picture #1.jpg'], '6eec850e32622c0e33bdae08ced29e24')
+        self.assertFalse('documents/exclude_me.txt' in self.furtive.manifest.manifest)
+        self.assertEqual(len(self.furtive.manifest.manifest), 3)
 
     def test_compare_added(self):
         """ Ensure comparison reports added files correctly """

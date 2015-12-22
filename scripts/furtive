@@ -42,6 +42,13 @@ def parse_args(args):
     parser.add_argument('--log-level', action='store', dest='log_level',
                         choices=('debug', 'info', 'warn', 'error', 'critical'),
                         default='info')
+    parser.add_argument('--exclude', dest='exclude', action='append',
+                        default=[],
+                        help='''Patterns to exclude files and directories from
+                                manifest. Can have multiple occurances of this
+                                argument. Excludes are not stored in the
+                                manifest so it is up to the user to provide the
+                                same arguments every run.''')
     parser.add_argument('action', choices=('create', 'compare'),
                         help=action_help,
                         nargs=1)
@@ -55,6 +62,7 @@ def parse_args(args):
         parsed_args.manifest_path = os.path.join(parsed_args.basedir,
                                                  '.manifest.yaml')
 
+    print parsed_args.exclude
     return parsed_args
 
 def main():
@@ -69,7 +77,7 @@ def main():
                         format=log_format,
                         datefmt=date_format)
 
-    furtive = Furtive(args.basedir, args.manifest_path)
+    furtive = Furtive(args.basedir, args.manifest_path, args.exclude)
 
     if args.action == 'create':
         furtive.create()

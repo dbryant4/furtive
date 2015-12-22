@@ -26,10 +26,11 @@ class Manifest(object):
                               ``create()`` method will overwrite it.
     """
 
-    def __init__(self, directory, manifest_file):
+    def __init__(self, directory, manifest_file, exclude=None):
         self.directory = directory
         self.manifest_file = manifest_file
         self.manifest = None
+        self.exclude = [] if exclude is None else exclude
 
     def __getitem__(self, hashed_file):
         return self.manifest[hashed_file]
@@ -40,7 +41,8 @@ class Manifest(object):
             in to `Manifest.manifest`.
         """
 
-        self.manifest = HashDirectory(self.directory).hash_files()
+        self.manifest = HashDirectory(self.directory,
+                                      self.exclude).hash_files()
 
     def load(self):
         """ Load a manifest from the manifest file.

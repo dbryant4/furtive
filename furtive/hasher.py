@@ -6,6 +6,7 @@
 import os
 import hashlib
 import logging
+import fnmatch
 import multiprocessing
 
 
@@ -82,9 +83,10 @@ class HashDirectory(object):
         :return type: dict
     """
 
-    def __init__(self, directory):
+    def __init__(self, directory, exclude=None):
         self.directory = directory
         self.hashes = {}
+        self.exclude = [] if exclude is None else exclude
 
     def hash_files(self):
         """ Orchestrates the discovery and hashing of files.
@@ -95,12 +97,14 @@ class HashDirectory(object):
         files_to_hash = []
         num_processes = multiprocessing.cpu_count() * 2
 
-        logging.info('Discovering files in %s and adding to processing queue',
+        logging.info('Discovering files in %s',
                      self.directory)
         for root, _, files in os.walk(self.directory):
             for found_file in files:
                 full_path = os.path.join(root, found_file)
                 relative_path = os.path.relpath(full_path, self.directory)
+                if self.excluded(relative_path):
+                    continue
                 logging.debug('Found %s', relative_path)
                 files_to_hash.append(relative_path)
 
@@ -132,3 +136,25 @@ class HashDirectory(object):
             self.hashes[item.keys()[0]] = item.values()[0]
 
         return self.hashes
+
+    def excluded(self, file_path):
+        """ Should the file be excluded from the manifest?
+
+            Determines if a file should be excluded based on UNIX style pattern
+            matching. Think *, ?, and [] sequences.
+
+            For matchers, see https://docs.python.org/2/library/fnmatch.html
+
+            :param file_path: path of the file to match against.
+            :type file_path: str
+
+            :return: True or False indicating if the file should be
+                     excluded from the list of files containted within the
+                     manifest.
+            :rtype: bool
+        """
+
+        for pattern in self.exclude:
+            if fnmatch.fnmatchcase(file_path, pattern):
+                return True
+        return False
