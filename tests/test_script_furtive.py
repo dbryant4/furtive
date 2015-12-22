@@ -124,7 +124,7 @@ class TestScriptFurtive(unittest.TestCase):
         sys.argv = args.split()
         furtive.main()
 
-        # Create a file and run compare again with --detailed-exitcodes. Should exit with 1
+        # Create a file and run check agian. Should exit with 1
         with open('tests/fixtures/test-data/test-file', 'w') as text_file:
             text_file.write('This is a test file.')
 

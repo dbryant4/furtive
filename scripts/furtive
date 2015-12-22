@@ -69,7 +69,7 @@ def parse_args(args):
                         'terminal. The return code will be the only way to\n'
                         'know if a Manifest has changed. This is useful for\n'
                         'scripting such as a cron based manifest checks.\n'
-                        'Useful with --detailed-exitcodes.')
+                        'Useful with the check command.')
     parser.add_argument('--version', action='version',
                         version='%(prog)s {version}'
                         .format(version=__version__))
