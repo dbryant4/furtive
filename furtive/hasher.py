@@ -78,6 +78,9 @@ class HashDirectory(object):
 
         :param directory: Path to directory containing files
         :type directory: str
+        :param exclude: list containing patterns to use to exclude files from
+                        the manifest.
+        :type exclude: list
 
         :return: Dictionary of file:hash
         :return type: dict

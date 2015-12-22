@@ -24,6 +24,9 @@ class Manifest(object):
                               path which will be used for the ``create()`` and
                               ``compare()`` methods. If the file exists, the
                               ``create()`` method will overwrite it.
+        :param exclude: list containing patterns to use to exclude files from
+                        the manifest.
+        :type exclude: list
     """
 
     def __init__(self, directory, manifest_file, exclude=None):
