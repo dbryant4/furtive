@@ -9,7 +9,7 @@ from StringIO import StringIO
 
 from mock import MagicMock, patch
 
-furtive = imp.load_source('furtive', 'scripts/furtive')
+from furtive import cli
 
 class TestScriptFurtive(unittest.TestCase):
     """ Test cases for furtive script which is the cli "binary" """
@@ -26,7 +26,7 @@ class TestScriptFurtive(unittest.TestCase):
         """ Ensure parsing of proper arguments """
 
         args = '--basedir tests/fixtures/test-data --manifest .test_manifest.yaml create'
-        parsed_args = furtive.parse_args(args.split())
+        parsed_args = cli.parse_args(args.split())
 
         self.assertEqual(parsed_args.basedir, 'tests/fixtures/test-data')
         self.assertEqual(parsed_args.manifest_path, '.test_manifest.yaml')
@@ -35,12 +35,12 @@ class TestScriptFurtive(unittest.TestCase):
 
 
     def test_create(self):
-        """ Ensure a manifest can be created using the furtive script """
+        """ Ensure a manifest can be created using the furtive cli """
 
         args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml create'
         sys.argv = args.split()
 
-        furtive.main()
+        cli.main()
 
         self.assertTrue(os.path.exists('.test_manifest.yaml'))
 
@@ -51,28 +51,28 @@ class TestScriptFurtive(unittest.TestCase):
         args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml create'
         sys.argv = args.split()
 
-        furtive.main()
+        cli.main()
 
         with open('tests/fixtures/test-data/test-file', 'w') as text_file:
             text_file.write('This is a test file.')
 
         args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml compare'
         sys.argv = args.split()
-        furtive.main()
+        cli.main()
 
         self.assertTrue('test-file' in mock_stdout.getvalue())
         self.assertTrue('!!python/unicode' not in mock_stdout.getvalue())
 
         args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml create'
         sys.argv = args.split()
-        furtive.main()
+        cli.main()
 
         with open('tests/fixtures/test-data/test-file', 'w') as text_file:
             text_file.write('This is a test file with changed content.')
 
         args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml compare'
         sys.argv = args.split()
-        furtive.main()
+        cli.main()
 
         self.assertTrue('test-file' in mock_stdout.getvalue())
         self.assertTrue('!!python' not in mock_stdout.getvalue())
@@ -88,25 +88,25 @@ class TestScriptFurtive(unittest.TestCase):
         args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml create --quiet'
         sys.argv = args.split()
 
-        furtive.main()
+        cli.main()
 
         with open('tests/fixtures/test-data/test-file', 'w') as text_file:
             text_file.write('This is a test file.')
 
         args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml compare --quiet'
         sys.argv = args.split()
-        furtive.main()
+        cli.main()
 
         args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml create --quiet'
         sys.argv = args.split()
-        furtive.main()
+        cli.main()
 
         with open('tests/fixtures/test-data/test-file', 'w') as text_file:
             text_file.write('This is a test file with changed content.')
 
         args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml compare --quiet'
         sys.argv = args.split()
-        furtive.main()
+        cli.main()
 
         stdout = mock_stdout.getvalue()
         self.assertTrue(stdout == '', msg=stdout)
@@ -117,12 +117,12 @@ class TestScriptFurtive(unittest.TestCase):
         # Create manifest
         args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml create'
         sys.argv = args.split()
-        furtive.main()
+        cli.main()
 
         # Compare without making changes. Should not raise exception.
         args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml check'
         sys.argv = args.split()
-        furtive.main()
+        cli.main()
 
         # Create a file and run check agian. Should exit with 1
         with open('tests/fixtures/test-data/test-file', 'w') as text_file:
@@ -131,13 +131,13 @@ class TestScriptFurtive(unittest.TestCase):
         args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml check'
         sys.argv = args.split()
         with self.assertRaises(SystemExit) as return_status:
-            furtive.main()
+            cli.main()
             self.assertEqual(return_status.exception.code, 1)
 
         # Add the new file to the manifest, then change it. Should exit with 1
         args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml create'
         sys.argv = args.split()
-        furtive.main()
+        cli.main()
 
         with open('tests/fixtures/test-data/test-file', 'w') as text_file:
             text_file.write('This is a changed test file.')
@@ -145,7 +145,7 @@ class TestScriptFurtive(unittest.TestCase):
         args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml check'
         sys.argv = args.split()
         with self.assertRaises(SystemExit) as return_status:
-            furtive.main()
+            cli.main()
             self.assertEqual(return_status.exception.code, 1)
 
         # delete test file then run compare. Should exit with 1
@@ -153,7 +153,7 @@ class TestScriptFurtive(unittest.TestCase):
         args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml check'
         sys.argv = args.split()
         with self.assertRaises(SystemExit) as return_status:
-            furtive.main()
+            cli.main()
             self.assertEqual(return_status.exception.code, 1)
 
     def tearDown(self):
