@@ -77,6 +77,40 @@ class TestScriptFurtive(unittest.TestCase):
         self.assertTrue('test-file' in mock_stdout.getvalue())
         self.assertTrue('!!python' not in mock_stdout.getvalue())
 
+
+    @patch('sys.stdout', new_callable=StringIO)
+    def test_quiet(self, mock_stdout):
+        """ Ensure nothing is printed to stdout if --quiet is provided.
+
+            Basically re-running test_compare() but with the --quiet arg.
+        """
+
+        args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml create --quiet'
+        sys.argv = args.split()
+
+        furtive.main()
+
+        with open('tests/fixtures/test-data/test-file', 'w') as text_file:
+            text_file.write('This is a test file.')
+
+        args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml compare --quiet'
+        sys.argv = args.split()
+        furtive.main()
+
+        args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml create --quiet'
+        sys.argv = args.split()
+        furtive.main()
+
+        with open('tests/fixtures/test-data/test-file', 'w') as text_file:
+            text_file.write('This is a test file with changed content.')
+
+        args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml compare --quiet'
+        sys.argv = args.split()
+        furtive.main()
+
+        stdout = mock_stdout.getvalue()
+        self.assertTrue(stdout == '', msg=stdout)
+
     def tearDown(self):
         """ Common tearDown tasks for all tests in this test case """
 

@@ -49,20 +49,31 @@ def parse_args(args):
                                 argument. Excludes are not stored in the
                                 manifest so it is up to the user to provide the
                                 same arguments every run.''')
-    parser.add_argument('action', choices=('create', 'compare'),
-                        help=action_help,
-                        nargs=1)
+    parser.add_argument('--quiet', action='store_true',
+                        help='''
+                        Only print out critial error messages. Do not print a
+                        report at the end of a compare run. Using this argument
+                        will override the log-level and set it to 'critical'.
+                        Only acceptions will be printed to the terminal. The
+                        return code will be the only way to know if a Manifest
+                        has changed. This is useful for scripting such as a cron
+                        based manifest checks.
+                        ''')
     parser.add_argument('--version', action='version',
                         version='%(prog)s {version}'
                         .format(version=__version__))
+    parser.add_argument('action', choices=('create', 'compare'),
+                        help=action_help,
+                        nargs=1)
     parsed_args = parser.parse_args(args)
     parsed_args.action = parsed_args.action.pop()
 
     if parsed_args.manifest_path is None:
         parsed_args.manifest_path = os.path.join(parsed_args.basedir,
                                                  '.manifest.yaml')
+    if parsed_args.quiet:
+        parsed_args.log_level = 'critical'
 
-    print parsed_args.exclude
     return parsed_args
 
 def main():
@@ -83,7 +94,8 @@ def main():
         furtive.create()
     elif args.action == 'compare':
         changes = furtive.compare()
-        sys.stdout.write(yaml.safe_dump(changes, default_flow_style=False))
+        if not args.quiet:
+            sys.stdout.write(yaml.safe_dump(changes, default_flow_style=False))
 
 if __name__ == '__main__':
     main()
