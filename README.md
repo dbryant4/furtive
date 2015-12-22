@@ -23,7 +23,7 @@ Contents
 
 ## Getting Started
 
-To install furtive, run `python setup.py install`.
+To install furtive, run `pip install furtive`.
 
 ## CLI Usage
 
