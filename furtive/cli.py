@@ -32,14 +32,14 @@ def parse_args(args):
                 compare but exits with status code 1 if there are changes to
                 the files included in the manifest. That is, if any file hash
                 changes or if files are added or removed, the application will
-                exit with a status code of 1 to indicate there are changes. This
-                action can be useful for scripting. For example, to run a
+                exit with a status code of 1 to indicate there are changes.
+                This action can be useful for scripting. For example, to run a
                 nightly cron check of a manifest.
       create  - create a new manifest from the files inthe directory
                 specified by the --basedir argument.
     '''
 
-    parser = argparse.ArgumentParser(description='Hash files within a directory.',
+    parser = argparse.ArgumentParser(description='Hash files in a directory.',
                                      formatter_class=RawTextHelpFormatter)
     parser.add_argument('--basedir', action='store', default='.',
                         help='Directory containing files that will be\n'
@@ -59,16 +59,16 @@ def parse_args(args):
                         help='Patterns to exclude files and directories from\n'
                              'manifest. Can have multiple occurances of this\n'
                              'argument. Excludes are not stored in the\n'
-                             'manifest so it is up to the user to provide the\n'
-                             'same arguments every run.')
+                             'manifest so it is up to the user to provide\n'
+                             'the same arguments every run.')
     parser.add_argument('--quiet', action='store_true',
                         help='Only print out critial error messages. Do not\n'
                         'print a report at the end of a compare run. Using\n'
-                        'this argument will override the log-level and set it\n'
-                        'to "critical". Only acceptions will be printed to\n'
-                        'terminal. The return code will be the only way to\n'
-                        'know if a Manifest has changed. This is useful for\n'
-                        'scripting such as a cron based manifest checks.\n'
+                        'this argument will override the log-level and set\n'
+                        'it to "critical". Only acceptions will be printed\n'
+                        'to terminal. The return code will be the only way\n'
+                        'to know if a Manifest has changed. This is useful\n'
+                        'for scripting such as a cron based manifest checks.\n'
                         'Useful with the check command.')
     parser.add_argument('--version', action='version',
                         version='%(prog)s {version}'
@@ -86,6 +86,7 @@ def parse_args(args):
         parsed_args.log_level = 'critical'
 
     return parsed_args
+
 
 def main():
     """ Starting point of the furtive command line tool """
