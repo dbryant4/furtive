@@ -15,6 +15,8 @@ class TestScriptFurtive(unittest.TestCase):
     """ Test cases for furtive script which is the cli "binary" """
 
     def setUp(self):
+        """ Common setup tasks for all tests in this test case """
+
         if os.path.exists('.test_manifest.yaml'):
             os.unlink('.test_manifest.yaml')
         if os.path.exists('tests/fixtures/test-data/test-file'):
@@ -76,6 +78,8 @@ class TestScriptFurtive(unittest.TestCase):
         self.assertTrue('!!python' not in mock_stdout.getvalue())
 
     def tearDown(self):
+        """ Common tearDown tasks for all tests in this test case """
+
         if os.path.exists('.test_manifest.yaml'):
             os.unlink('.test_manifest.yaml')
         if os.path.exists('tests/fixtures/test-data/test-file'):

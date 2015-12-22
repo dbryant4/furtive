@@ -6,6 +6,7 @@ import unittest
 from furtive.manifest import Manifest
 
 class TestManifest(unittest.TestCase):
+    """ Test case intending to test the furtive.manifest sub-module """
 
     def test_manifest_create(self):
         """ Ensure a manifest can be generated from a directory """
@@ -46,6 +47,8 @@ class TestManifest(unittest.TestCase):
         self.assertEqual(len(manifest.manifest), 4)
 
     def tearDown(self):
+        """ Common tearDown tasks for all tests in this test case """
+
         if os.path.exists('.test_manifest.yaml'):
             os.unlink('.test_manifest.yaml')
 
