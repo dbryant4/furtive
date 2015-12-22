@@ -28,7 +28,7 @@ class TestFurtive(unittest.TestCase):
         self.assertEqual(self.furtive.manifest['documents/Important Document 1.odt'], 'd460a36805fb460c038d96723f206b20')
         self.assertEqual(self.furtive.manifest['documents/Important Presentation.odp'], '1911ec839cedcbf00739a7d3447ec3a3')
         self.assertEqual(self.furtive.manifest['pictures/Picture #1.jpg'], '6eec850e32622c0e33bdae08ced29e24')
-        self.assertFalse(self.furtive.manifest.manifest.has_key('documents/exclude_me.txt'))
+        self.assertFalse('documents/exclude_me.txt' in self.furtive.manifest.manifest)
         self.assertEqual(len(self.furtive.manifest.manifest), 3)
 
     def test_compare_added(self):
