@@ -75,5 +75,23 @@ class TestHashDirectory(unittest.TestCase):
         self.assertEqual(result, None)
         terminating.set.assert_called_once_with()
 
+    def test_hash_directory_exclude(self):
+        """ Ensure furtive.hasher.HashDirectory().exclude() properly indicates that a file should be excluded. """
+
+        hash_directory = HashDirectory('tests/fixtures/test-data', ['exclude*'])
+        self.assertFalse(hash_directory.excluded('documents/exclude_me.txt'))
+        self.assertTrue(hash_directory.excluded('exclude_me.txt'))
+        self.assertFalse(hash_directory.excluded('documents/Important Document 1.odt'))
+
+        hash_directory = HashDirectory('tests/fixtures/test-data', ['exclude*', 'pictures/*'])
+        self.assertFalse(hash_directory.excluded('documents/exclude_me.txt'))
+        self.assertTrue(hash_directory.excluded('exclude_me.txt'))
+        self.assertTrue(hash_directory.excluded('pictures/Picture #1.jpg'))
+        self.assertFalse(hash_directory.excluded('documents/Important Document 1.odt'))
+
+        hash_directory = HashDirectory('tests/fixtures/test-data', ['*document*', 'pictures/*'])
+        self.assertTrue(hash_directory.excluded('documents/Important Document 1.odt'))
+        self.assertFalse(hash_directory.excluded('Important Document 1.odt'))
+
 if __name__ == '__main__':
     unittest.main()
