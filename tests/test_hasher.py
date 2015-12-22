@@ -9,6 +9,8 @@ from mock import MagicMock, patch
 from furtive.hasher import HashDirectory, hash_task, initializer
 
 class TestHashDirectory(unittest.TestCase):
+    """ Test case intended to tes the furtive.hasher sub-module """
+
     def test_hash_directory(self):
         """ Ensure HashDirectory will correctly hash all files in a directory """
 

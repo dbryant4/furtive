@@ -6,7 +6,8 @@ import unittest
 from furtive import Furtive
 
 class TestFurtive(unittest.TestCase):
-
+    """ Test case intended to test the furtive module """
+    
     def setUp(self):
         self.furtive = Furtive('tests/fixtures/test-data', '.test_manifest.yaml')
         self.furtive.create()

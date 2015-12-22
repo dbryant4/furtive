@@ -6,7 +6,8 @@ import unittest
 from furtive.manifest import Manifest
 
 class TestManifest(unittest.TestCase):
-
+    """ Test case intending to test the furtive.manifest sub-module """
+    
     def test_manifest_create(self):
         """ Ensure a manifest can be generated from a directory """
 
