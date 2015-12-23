@@ -3,6 +3,7 @@
 import os
 import sys
 import imp
+import yaml
 import unittest
 
 from StringIO import StringIO
@@ -21,6 +22,8 @@ class TestScriptFurtive(unittest.TestCase):
             os.unlink('.test_manifest.yaml')
         if os.path.exists('tests/fixtures/test-data/test-file'):
             os.unlink('tests/fixtures/test-data/test-file')
+        if os.path.exists('tests/fixtures/report.yml'):
+            os.unlink('tests/fixtures/report.yml')
 
     def test_parse_args(self):
         """ Ensure parsing of proper arguments """
@@ -156,6 +159,30 @@ class TestScriptFurtive(unittest.TestCase):
             cli.main()
             self.assertEqual(return_status.exception.code, 1)
 
+    def test_write_report_to_file(self):
+        """ Ensure the diff report can be written to a file. """
+
+        # Create manifest
+        args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml create'
+        sys.argv = args.split()
+        cli.main()
+
+        # Check output report file
+        args = 'app.py --basedir tests/fixtures/test-data --manifest .test_manifest.yaml check --report-output tests/fixtures/report.yml'
+        sys.argv = args.split()
+        cli.main()
+
+        # Assert the file exists
+        self.assertTrue(os.path.exists('tests/fixtures/report.yml'))
+
+
+        # attempt to load the File
+        with open('tests/fixtures/report.yml') as report_file:
+            report = yaml.safe_load(report_file.read())
+            self.assertTrue('changed' in report)
+            self.assertTrue('added' in report)
+            self.assertTrue('removed' in report)
+
     def tearDown(self):
         """ Common tearDown tasks for all tests in this test case """
 
@@ -163,6 +190,8 @@ class TestScriptFurtive(unittest.TestCase):
             os.unlink('.test_manifest.yaml')
         if os.path.exists('tests/fixtures/test-data/test-file'):
             os.unlink('tests/fixtures/test-data/test-file')
+        if os.path.exists('tests/fixtures/report.yml'):
+            os.unlink('tests/fixtures/report.yml')
 
 if __name__ == '__main__':
     unittest.main()
