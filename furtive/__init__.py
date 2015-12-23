@@ -9,7 +9,7 @@ import logging
 from furtive.hasher import HashDirectory
 from furtive.manifest import Manifest
 
-__version__ = '0.2.4'
+__version__ = '0.3.0'
 
 
 class Furtive(object):
