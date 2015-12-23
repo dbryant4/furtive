@@ -53,9 +53,9 @@ def parse_args(args=None):
                              'Default: <basedir>/.manifest.yaml')
     parser.add_argument('--log-level', action='store', dest='log_level',
                         choices=('debug', 'info', 'warn', 'error', 'critical'),
-                        default='info')
+                        default='info', help='verbosity of furtive')
     parser.add_argument('--exclude', dest='exclude', action='append',
-                        default=[],
+                        default=[], metavar='PATTERN',
                         help='Patterns to exclude files and directories from\n'
                              'manifest. Can have multiple occurances of this\n'
                              'argument. Excludes are not stored in the\n'
@@ -79,6 +79,13 @@ def parse_args(args=None):
                         'to know if a Manifest has changed. This is useful\n'
                         'for scripting such as a cron based manifest checks.\n'
                         'Useful with the check command.')
+    parser.add_argument('--report-output', metavar='FILE_NAME',
+                        type=argparse.FileType('w'), default='-',
+                        help='File to print the diff report to. - for stdout.'
+                             'This can be consumed by other scripts to'
+                             'determine exactly what has changed within the'
+                             'manifest'
+                             'Default: -')
     parser.add_argument('--version', action='version',
                         version='%(prog)s {version}'
                         .format(version=__version__))
@@ -119,11 +126,9 @@ def main():
     elif args.action in ['compare', 'check']:
         changes = furtive.compare()
         if not args.quiet:
-            sys.stdout.write(yaml.safe_dump(changes, default_flow_style=False))
+            args.report_output.write(yaml.safe_dump(changes,
+                                                    default_flow_style=False))
         if args.action == 'check' and (changes['changed'] or
                                        changes['removed'] or
                                        changes['added']):
             sys.exit(1)
-
-if __name__ == '__main__':
-    main()
