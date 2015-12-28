@@ -137,7 +137,8 @@ class HashDirectory(object):
             pool.join()
             logging.debug('Processes stopped')
 
-        logging.debug('Switching current working directory back to %s', old_cwd)
+        logging.debug('Switching current working directory back to %s',
+                      old_cwd)
         os.chdir(old_cwd)
 
         for item in results:
