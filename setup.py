@@ -2,7 +2,7 @@
 
 from distutils.core import setup
 
-__VERSION__ = '0.3.0'
+__VERSION__ = '0.4.0'
 
 long_description = """
 Github: https://github.com/dbryant4/furtive
