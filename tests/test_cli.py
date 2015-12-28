@@ -1,14 +1,20 @@
 """ Test cases for furtive script """
+from future import standard_library
+standard_library.install_aliases()
 
 import os
+import six
 import sys
 import imp
 import yaml
 import unittest
 
-from StringIO import StringIO
-
-from mock import MagicMock, patch
+if six.PY2:
+    from io import BytesIO as StringIO
+    from mock import MagicMock, patch
+elif six.PY3:
+    from io import StringIO
+    from unittest.mock import MagicMock, patch
 
 from furtive import cli
 

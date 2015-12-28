@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """ Manages the hashing of files """
+from builtins import object
 
 import os
 import hashlib
@@ -33,7 +34,7 @@ def hash_task(file_path, hash_algorithm='md5'):
 
     try:
         if not terminating.is_set():
-            with open(file_path, 'r') as file_to_hash:
+            with open(file_path, 'rb') as file_to_hash:
                 logging.debug('Starting Hash of %s', file_path)
                 hash_object = hashlib.new(hash_algorithm)
                 while True:
@@ -126,17 +127,21 @@ class HashDirectory(object):
         try:
             results = []
             results = pool.map(hash_task, files_to_hash, num_processes*2)
+            logging.debug('Stopping hashing processes')
             pool.close()
         except KeyboardInterrupt:
             pool.terminate()
         finally:
             logging.debug('Waiting for processes to stop')
+            pool.close()
             pool.join()
             logging.debug('Processes stopped')
 
+        logging.debug('Switching current working directory back to %s', old_cwd)
         os.chdir(old_cwd)
+
         for item in results:
-            self.hashes[item.keys()[0]] = item.values()[0]
+            self.hashes[list(item.keys())[0]] = list(item.values())[0]
 
         return self.hashes
 
