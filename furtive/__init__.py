@@ -1,7 +1,6 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 """ Furtive - File Integrity Verification System """
-from builtins import object
 
 
 import os

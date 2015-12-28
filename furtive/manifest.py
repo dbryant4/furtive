@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 """ Manifest of files and their hashes """
-from builtins import object
+
 
 import logging
 

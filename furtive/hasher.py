@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """ Manages the hashing of files """
-from builtins import object
+
 
 import os
 import hashlib
