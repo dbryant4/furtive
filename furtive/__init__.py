@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 """ Furtive - File Integrity Verification System """
 
-
 import os
 import logging
 

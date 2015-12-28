@@ -1,10 +1,15 @@
 """ Test cases for furtive.hasher object """
 
+import six
 import logging
 import unittest
 import multiprocessing
 
-from mock import MagicMock, patch
+if six.PY2:
+    from mock import MagicMock, patch
+elif six.PY3:
+    from unittest.mock import MagicMock, patch
+
 
 from furtive.hasher import HashDirectory, hash_task, initializer
 

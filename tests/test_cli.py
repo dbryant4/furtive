@@ -1,14 +1,21 @@
 """ Test cases for furtive script """
+from future import standard_library
+standard_library.install_aliases()
 
 import os
+import six
 import sys
 import imp
 import yaml
+import argparse
 import unittest
 
-from StringIO import StringIO
-
-from mock import MagicMock, patch
+if six.PY2:
+    from io import BytesIO as StringIO
+    from mock import MagicMock, patch
+elif six.PY3:
+    from io import StringIO
+    from unittest.mock import MagicMock, patch
 
 from furtive import cli
 
@@ -35,6 +42,22 @@ class TestScriptFurtive(unittest.TestCase):
         self.assertEqual(parsed_args.manifest_path, '.test_manifest.yaml')
         self.assertEqual(parsed_args.action, 'create')
         self.assertEqual(parsed_args.log_level, 'info')
+
+    def test_parse_args_omit_manifest(self):
+        """ Ensure parsing of proper arguments when a manifest is not provided """
+
+        args = '--basedir tests/fixtures/test-data create'
+        parsed_args = cli.parse_args(args.split())
+
+        self.assertEqual(parsed_args.manifest_path, 'tests/fixtures/test-data/.manifest.yaml')
+
+    def test_parse_args_return_when_none(self):
+        """ Ensure function returns parser object when None is passed """
+
+
+        parsed_args = cli.parse_args(None)
+
+        self.assertEqual(type(parsed_args), argparse.ArgumentParser)
 
 
     def test_create(self):
