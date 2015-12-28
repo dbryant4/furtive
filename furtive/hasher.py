@@ -3,7 +3,6 @@
 
 """ Manages the hashing of files """
 
-
 import os
 import hashlib
 import logging

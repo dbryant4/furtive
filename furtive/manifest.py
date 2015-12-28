@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 """ Manifest of files and their hashes """
 
-
 import logging
 
 from yaml import load, dump
