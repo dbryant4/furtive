@@ -24,7 +24,7 @@ setup(name='Furtive',
       url='https://furtive.readthedocs.org',
       download_url='https://github.com/dbryant4/furtive',
       install_requires=[
-        'PyYAML==3.11',
+        'PyYAML==5.4',
         'argparse==1.4.0',
         'future==0.15.2'
       ],
